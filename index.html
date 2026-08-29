@@ -1,81 +1,889 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <title>Girish Soman personal website</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Girish Soman — Senior Software Engineer</title>
+  <meta name="description" content="Senior Software Engineer with 5+ years building high-throughput microservices, real-time observability tooling and cloud infrastructure on Node.js, TypeScript, Next.js and AWS.">
+  <meta name="author" content="Girish Soman S G">
+  <link rel="canonical" href="https://girish-soman.github.io/">
+
+  <!-- Theme colour matches each theme's page background so the browser chrome blends in -->
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Girish Soman — Senior Software Engineer">
+  <meta property="og:description" content="Architecting resilient, full-stack systems with Node.js, TypeScript, Next.js and AWS.">
+  <meta property="og:url" content="https://girish-soman.github.io/">
+  <meta property="og:locale" content="en_IN">
+  <meta property="profile:first_name" content="Girish">
+  <meta property="profile:last_name" content="Soman">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Girish Soman — Senior Software Engineer">
+  <meta name="twitter:description" content="Architecting resilient, full-stack systems with Node.js, TypeScript, Next.js and AWS.">
+
+  <!-- SVG favicon, inline so it costs no request -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230071e3'/%3E%3Ctext x='50%25' y='53%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='34' font-weight='700' fill='white'%3EG%3C/text%3E%3C/svg%3E">
+
+  <!-- Fonts: preconnect early, load non-blocking. The native stack paints first. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/main.css">
+
+  <!-- Resolve the theme before first paint so there is never a flash of the wrong one -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme') || 'system';
+        var dark = stored === 'dark' || (stored === 'system' &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+
+  <!-- Structured data for search engines and rich results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Girish Soman S G",
+    "jobTitle": "Senior Software Engineer",
+    "email": "mailto:giri943@gmail.com",
+    "url": "https://girish-soman.github.io/",
+    "address": { "@type": "PostalAddress", "addressRegion": "Kerala", "addressCountry": "IN" },
+    "worksFor": { "@type": "Organization", "name": "Schbang Digital Solutions" },
+    "sameAs": ["https://github.com/giri943"],
+    "knowsAbout": ["Node.js", "TypeScript", "Next.js", "React", "AWS", "PostgreSQL", "MongoDB", "Strapi", "Docker", "System Design"]
+  }
+  </script>
 </head>
 
 <body>
-  <table cellspacing="10">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
 
-    <tr>
-      <td><img src="https://media-exp1.licdn.com/dms/image/C5603AQHAa9T5hh3Z8w/profile-displayphoto-shrink_200_200/0?e=1610582400&v=beta&t=clPTIfIrf5NxqIigAQ2juDYd9oGw_XxTRhoFhNa_3YM" alt="Girish Soman Profile picture"></td>
-      <td>
-        <h1>Girish Soman</h1>
-        <p><em>Graduate in Business administration from <strong><a href="https://www.unom.ac.in/">University of Madras</a></strong></em></p>
-        <p>I am Jobless and money less person with a strong resolution towards next year to have a good job in hand which could help me to handle my day to day needs.</p>
-      </td>
-    </tr>
-  </table>
+  <!-- Ambient field: drifting aurora, fine grid, film grain -->
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__blob ambient__blob--1"></div>
+    <div class="ambient__blob ambient__blob--2"></div>
+    <div class="ambient__blob ambient__blob--3"></div>
+    <div class="ambient__grid"></div>
+    <div class="ambient__grain"></div>
+  </div>
 
+  <!-- Icon sprite: one inline definition, referenced everywhere via <use> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="i-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></g>
+      <g id="i-moon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></g>
+      <g id="i-monitor" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></g>
+      <g id="i-mail" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></g>
+      <g id="i-github" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3.1-.4 6.4-1.5 6.4-7A5.4 5.4 0 0 0 20 4.8 5.1 5.1 0 0 0 19.9 1S18.7.7 16 2.5a13.4 13.4 0 0 0-7 0C6.3.7 5.1 1 5.1 1A5.1 5.1 0 0 0 5 4.8a5.4 5.4 0 0 0-1.5 3.8c0 5.4 3.3 6.6 6.4 7A3.4 3.4 0 0 0 9 18.1V22"/></g>
+      <g id="i-linkedin" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></g>
+      <g id="i-search" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></g>
+      <g id="i-arrow-up" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></g>
+      <g id="i-arrow-ur" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></g>
+      <g id="i-check" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11v1a10 10 0 1 1-5.9-9.1"/><path d="m22 4-10 10-3-3"/></g>
+      <g id="i-copy" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></g>
+      <g id="i-printer" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></g>
+      <g id="i-briefcase" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></g>
+      <g id="i-pin" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></g>
+      <g id="i-calendar" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></g>
+      <g id="i-server" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></g>
+      <g id="i-layout" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></g>
+      <g id="i-cloud" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.3A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></g>
+      <g id="i-database" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.7-4 3-9 3s-9-1.3-9-3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/></g>
+      <g id="i-activity" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></g>
+      <g id="i-shield" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></g>
+      <g id="i-zap" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></g>
+      <g id="i-users" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></g>
+      <g id="i-star" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8l-6.2 3.2L7 14.1 2 9.3l6.9-1L12 2z"/></g>
+      <g id="i-branch" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></g>
+      <g id="i-book" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></g>
+      <g id="i-enter" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 10-5 5 5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></g>
+      <g id="i-updown" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6 6-6-6M6 9l6-6 6 6"/></g>
+      <g id="i-download" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></g>
+      <g id="i-terminal" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></g>
+      <g id="i-code" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></g>
+      <g id="i-layers" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 10 5-10 5L2 7l10-5z"/><path d="m2 12 10 5 10-5M2 17l10 5 10-5"/></g>
+    </defs>
+  </svg>
 
-  <hr>
-  <h3>Eudational Background</h3>
-  <ul>
-    <li> Tenth Level- <a href="https://www.cisce.org/">CICSE</a> from <a
-        href="https://www.google.com/maps/dir/9.2096509,76.8147834/sda+hss+pathanamthitta/@9.2331109,76.7815644,14z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x3b0615005bb7b8e7:0x2d40b251c1d8bb27!2m2!1d76.7817277!2d9.2556357">S D A H S S</a></li>
-    <li> Twelfth Level- <a href="https://www.cisce.org/">CICSE</a> from <a
-        href="https://www.google.com/maps/dir/9.2096509,76.8147834/sda+hss+pathanamthitta/@9.2331109,76.7815644,14z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x3b0615005bb7b8e7:0x2d40b251c1d8bb27!2m2!1d76.7817277!2d9.2556357">S D A H S S</a></li>
-    <li> Under Graduate in Bachelor of Business Administration- <a href="https://www.unom.ac.in/">University of Madras</a></li>
-  </ul>
-  <hr>
-  <h3>Certifications</h3>
-  <ul>
-    <li><a href="https://learndigital.withgoogle.com/digitalunlocked/course/digital-marketing">Google certified in Fundamentals of Digital Marketing</a></li>
-    <li><a href="https://www.nebosh.org.uk/home/">NEBOSH</a> IGC in Occupational Health and Safety at work</a></li>
-    <li><a href="https://www.highfieldqualifications.com/">HABC Basic First aid Training</a></li>
-  </ul>
-  <hr>
-  <h3>Work Experience</h3>
-  <table cellspacing="10">
-    <th>Date</th>
-    <th>Designation</th>
-    <th>Firm</th>
-    <tr>
-      <td>Jan 2014-Jan 2016</td>
-      <td>Production cordinator</td>
-      <td><a href="http://www.enjayes.com/">ENJAYES spices and chemical oils</a>, Kerala</td>
-    </tr>
-    <tr>
-      <td>Aug 2016-Apr 2019</td>
-      <td>Safety Officer</td>
-      <td><a href="http://islandtoweruae.ae/">ITEM LLC</a>, Dubai</td>
-    </tr>
-  </table>
-  <hr>
-  <h3>Skills</h3>
-  <table cellspacing="10">
-    <th>Type</th>
-    <th>Rating</th>
-    <tr>
-      <td>excel</td>
-      <td>⭐ ⭐ ⭐ </td>
-    </tr>
-    <td>Sql</td>
-    <td>⭐ ⭐ </td>
-    <tr>
-      <td>ERP</td>
-      <td>⭐ ⭐ </td>
-    </tr>
-    <tr>
-      <td>photography</td>
-      <td>⭐ ⭐ ⭐ ⭐ </td>
-    </tr>
-  </table>
-  <hr>
-  <h3><a href="my contact info.html">My contact informations</a></h3>
+  <!-- ====================================================================
+       Header
+       ==================================================================== -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a class="brand" href="#" aria-label="Girish Soman, home">
+        <span class="brand__mark" aria-hidden="true">G</span>
+        <span aria-hidden="true"><span class="brand__punct">&lt;</span>girish<span class="brand__punct">/&gt;</span></span>
+      </a>
+
+      <nav class="nav" id="primary-nav" aria-label="Sections">
+        <span class="nav__indicator" aria-hidden="true"></span>
+        <a class="nav__link" href="#about">About</a>
+        <a class="nav__link" href="#experience">Experience</a>
+        <a class="nav__link" href="#skills">Skills</a>
+        <a class="nav__link" href="#work">Work</a>
+        <a class="nav__link" href="#activity">Activity</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="palette-trigger" type="button" data-palette-open aria-label="Open command palette">
+          <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+          <span>Search</span>
+          <kbd class="kbd" data-mod-key>Ctrl K</kbd>
+        </button>
+
+        <div class="theme-toggle" role="radiogroup" aria-label="Colour theme">
+          <span class="theme-toggle__thumb" aria-hidden="true" data-theme-thumb></span>
+          <button class="theme-toggle__option" type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+          </button>
+          <button class="theme-toggle__option" type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Match system theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-monitor"/></svg>
+          </button>
+          <button class="theme-toggle__option" type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-moon"/></svg>
+          </button>
+        </div>
+
+        <button class="menu-btn" type="button" data-drawer-toggle aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
+          <span class="menu-btn__bars" aria-hidden="true"><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div class="drawer" id="drawer" data-open="false" role="dialog" aria-modal="true" aria-label="Menu" inert>
+    <div class="drawer__scrim" data-drawer-close></div>
+    <div class="drawer__panel">
+      <a class="drawer__link" href="#about">About <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      <a class="drawer__link" href="#experience">Experience <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      <a class="drawer__link" href="#skills">Skills <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      <a class="drawer__link" href="#work">Work <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      <a class="drawer__link" href="#activity">Activity <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      <a class="drawer__link" href="#contact">Contact <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      <div class="drawer__footer">
+        <a class="btn btn--primary" href="mailto:giri943@gmail.com">
+          <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"/></svg> Get in touch
+        </a>
+        <button class="btn" type="button" data-print>
+          <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-printer"/></svg> Save as PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command palette -->
+  <div class="palette" id="palette" data-open="false" role="dialog" aria-modal="true" aria-label="Command palette" inert>
+    <div class="palette__scrim" data-palette-close></div>
+    <div class="palette__panel">
+      <div class="palette__search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+        <input class="palette__input" type="text" id="palette-input" placeholder="Jump to a section or run a command…"
+               autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true"
+               aria-controls="palette-list" aria-autocomplete="list">
+      </div>
+      <div class="palette__list" id="palette-list" role="listbox" aria-label="Results"></div>
+      <div class="palette__footer" aria-hidden="true">
+        <span><kbd class="kbd"><svg width="10" height="10" viewBox="0 0 24 24"><use href="#i-updown"/></svg></kbd> Navigate</span>
+        <span><kbd class="kbd"><svg width="10" height="10" viewBox="0 0 24 24"><use href="#i-enter"/></svg></kbd> Select</span>
+        <span><kbd class="kbd">Esc</kbd> Close</span>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- ==================================================================
+         Hero
+         ================================================================== -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <span class="badge badge--accent" data-reveal>
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Open to senior engineering roles
+          </span>
+
+          <h1 class="display" data-reveal style="--reveal-delay:60ms">
+            Architecting <span class="text-gradient">resilient</span> systems, end to end.
+          </h1>
+
+          <p class="lead hero__lead" data-reveal style="--reveal-delay:120ms">
+            Senior Software Engineer with 5+ years designing high-throughput microservices,
+            real-time observability tooling and cloud infrastructure on Node.js, TypeScript,
+            Next.js and AWS.
+          </p>
+
+          <ul class="hero__meta" data-reveal style="--reveal-delay:180ms">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"/></svg> Kerala, India</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-briefcase"/></svg> Schbang Digital Solutions</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-calendar"/></svg> Remote since 2021</li>
+          </ul>
+
+          <div class="cluster" data-reveal style="--reveal-delay:240ms">
+            <a class="btn btn--primary btn--lg" href="#work">
+              View selected work
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+            </a>
+            <button class="btn btn--lg" type="button" data-print>
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
+              Download CV
+            </button>
+            <a class="btn btn--icon" href="https://github.com/giri943" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+              <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><use href="#i-github"/></svg>
+            </a>
+            <a class="btn btn--icon" href="https://www.linkedin.com/in/girish-soman" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+              <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><use href="#i-linkedin"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Terminal readout: types itself in on load -->
+        <div data-reveal="right" style="--reveal-delay:300ms">
+          <div class="terminal" data-tilt>
+            <div class="terminal__bar">
+              <div class="terminal__lights" aria-hidden="true"><span></span><span></span><span></span></div>
+              <span class="terminal__title">girish@engineer — ~/systems</span>
+            </div>
+            <div class="terminal__body" data-typewriter>
+              <p class="terminal__comment">$ whoami --verbose</p>
+              <p class="terminal__row"><span class="terminal__ok">✓</span> Experience <span class="terminal__value">5+ years</span></p>
+              <p class="terminal__row"><span class="terminal__ok">✓</span> Backend <span class="terminal__value">Node.js · TypeScript · AWS</span></p>
+              <p class="terminal__row"><span class="terminal__ok">✓</span> Frontend <span class="terminal__value">Next.js · React · Strapi</span></p>
+              <p class="terminal__row"><span class="terminal__ok">✓</span> Data <span class="terminal__value">PostgreSQL · MySQL · MongoDB</span></p>
+              <p class="terminal__row"><span class="terminal__ok">✓</span> Cloud <span class="terminal__value">SQS · SES · S3 · CloudFront</span></p>
+              <p class="terminal__prompt">$ status --check<br><span class="terminal__ok">All systems healthy. Ready to deploy.</span><span class="terminal__caret" aria-hidden="true"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <span>Scroll</span>
+        <span class="scroll-cue__rail"></span>
+      </div>
+    </section>
+
+    <!-- Tech marquee -->
+    <div class="marquee" aria-hidden="true" data-marquee>
+      <div class="marquee__track">
+        <span class="marquee__item">TypeScript</span>
+        <span class="marquee__item">Node.js</span>
+        <span class="marquee__item">Next.js</span>
+        <span class="marquee__item">React</span>
+        <span class="marquee__item">AWS</span>
+        <span class="marquee__item">PostgreSQL</span>
+        <span class="marquee__item">MongoDB</span>
+        <span class="marquee__item">Docker</span>
+        <span class="marquee__item">Strapi</span>
+        <span class="marquee__item">Redis</span>
+        <span class="marquee__item">SQS</span>
+        <span class="marquee__item">CloudFront</span>
+        <span class="marquee__item">Server-Sent Events</span>
+        <span class="marquee__item">REST APIs</span>
+        <span class="marquee__item">OpenAI API</span>
+      </div>
+    </div>
+
+    <!-- ==================================================================
+         Key metrics
+         ================================================================== -->
+    <section class="section section--tight" aria-label="Key metrics">
+      <div class="container">
+        <div class="stats">
+          <div class="card stat" data-reveal="scale" data-spotlight>
+            <div class="stat__value"><span data-count="5">0</span><span class="stat__suffix">+</span></div>
+            <p class="stat__label">Years shipping production systems</p>
+          </div>
+          <div class="card stat" data-reveal="scale" data-spotlight style="--reveal-delay:80ms">
+            <div class="stat__value"><span data-count="40">0</span><span class="stat__suffix">%</span></div>
+            <p class="stat__label">Peak API response time cut</p>
+          </div>
+          <div class="card stat" data-reveal="scale" data-spotlight style="--reveal-delay:160ms">
+            <div class="stat__value"><span data-count="99.9" data-decimals="1">0</span><span class="stat__suffix">%</span></div>
+            <p class="stat__label">Uptime tracked via observability</p>
+          </div>
+          <div class="card stat" data-reveal="scale" data-spotlight style="--reveal-delay:240ms">
+            <div class="stat__value"><span data-count="6">0</span><span class="stat__suffix">+</span></div>
+            <p class="stat__label">Platforms &amp; services delivered</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         About
+         ================================================================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-reveal>
+            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-code"/></svg>
+            About
+          </span>
+          <h2 class="h2" data-reveal style="--reveal-delay:60ms">
+            I care about the systems nobody notices, because they never break.
+          </h2>
+          <p class="lead" data-reveal style="--reveal-delay:120ms">
+            Most of my work lives in the layer between a product promise and the
+            infrastructure that has to keep it. Queues that retry properly, indexes that
+            hold under load, alerts that fire before a customer notices.
+          </p>
+        </div>
+
+        <div class="bento">
+          <article class="card bento__cell bento__cell--wide" data-reveal data-spotlight>
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-activity"/></svg></span>
+            <h3 class="bento__title">How I work</h3>
+            <p class="bento__text">
+              I start from failure modes rather than happy paths. That means instrumenting
+              first, designing for retries and backpressure, and treating observability as
+              a feature rather than an afterthought. Most of my recent work has been
+              turning invisible backend behaviour into something a team can actually see
+              and act on.
+            </p>
+          </article>
+
+          <article class="card bento__cell" data-reveal data-spotlight style="--reveal-delay:80ms">
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-zap"/></svg></span>
+            <h3 class="bento__title">Currently</h3>
+            <p class="bento__text">
+              Building real-time observability and AI messaging pipelines at Schbang,
+              remotely from Kerala.
+            </p>
+          </article>
+
+          <article class="card bento__cell" data-reveal data-spotlight style="--reveal-delay:160ms">
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-book"/></svg></span>
+            <h3 class="bento__title">Interests</h3>
+            <p class="bento__text">
+              Distributed systems, queue semantics, database internals and developer
+              tooling that removes guesswork.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         Experience
+         ================================================================== -->
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-reveal>
+            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-briefcase"/></svg>
+            Experience
+          </span>
+          <h2 class="h2" data-reveal style="--reveal-delay:60ms">Professional track record</h2>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline__item" data-reveal>
+            <span class="timeline__node" aria-hidden="true"></span>
+            <div class="card" data-spotlight>
+              <header class="role__head">
+                <div>
+                  <h3 class="h3">Senior Software Engineer</h3>
+                  <p class="role__company">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-briefcase"/></svg>
+                    Schbang Digital Solutions · Mumbai, India (Remote)
+                  </p>
+                </div>
+                <div class="role__meta">
+                  <span class="badge">Feb 2021 — Present</span>
+                  <span class="badge">Full-time</span>
+                </div>
+              </header>
+
+              <ul class="role__list">
+                <li>
+                  <strong>Schbang Pulse — observability platform</strong>
+                  Architected real-time API monitoring, uptime tracking and automated
+                  alerting on TypeScript, Node.js and Server-Sent Events, giving teams
+                  live visibility into service health.
+                </li>
+                <li>
+                  <strong>Asynchronous messaging pipelines</strong>
+                  Engineered an AI-driven WhatsApp chatbot backend on Node.js, AWS SQS and
+                  AWS SES, handling high-volume webhooks with durable job retries.
+                </li>
+                <li>
+                  <strong>API security &amp; authentication</strong>
+                  Built REST APIs with strict rate limiting, JWT and Google OAuth
+                  authentication, and role-based access control across services.
+                </li>
+                <li>
+                  <strong>Database optimisation</strong>
+                  Tuned PostgreSQL, MySQL and MongoDB schema indexing, cutting peak API
+                  response times by up to 40%.
+                </li>
+                <li>
+                  <strong>Cloud asset delivery</strong>
+                  Deployed cloud-native asset pipelines on AWS S3 and CloudFront for
+                  edge-optimised distribution.
+                </li>
+              </ul>
+
+              <div class="role__stack">
+                <span class="chip">TypeScript</span>
+                <span class="chip">Node.js</span>
+                <span class="chip">Next.js</span>
+                <span class="chip">AWS SQS</span>
+                <span class="chip">AWS SES</span>
+                <span class="chip">S3 + CloudFront</span>
+                <span class="chip">PostgreSQL</span>
+                <span class="chip">MongoDB</span>
+                <span class="chip">Strapi</span>
+                <span class="chip">Docker</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         Capabilities
+         ================================================================== -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-reveal>
+            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layers"/></svg>
+            Capabilities
+          </span>
+          <h2 class="h2" data-reveal style="--reveal-delay:60ms">Technical range</h2>
+          <p class="lead" data-reveal style="--reveal-delay:120ms">
+            Deep on the backend and infrastructure, comfortable owning the frontend and
+            CMS layer when a feature needs to ship end to end.
+          </p>
+        </div>
+
+        <div class="bento">
+          <article class="card bento__cell" data-reveal data-spotlight>
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-server"/></svg></span>
+            <h3 class="bento__title">Backend architecture</h3>
+            <p class="bento__text">Event-driven microservices, queue processing and SLA-conscious API design.</p>
+            <div class="bento__chips">
+              <span class="chip">Node.js</span><span class="chip">TypeScript</span><span class="chip">REST</span><span class="chip">SSE</span>
+            </div>
+          </article>
+
+          <article class="card bento__cell" data-reveal data-spotlight style="--reveal-delay:80ms">
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-layout"/></svg></span>
+            <h3 class="bento__title">Frontend &amp; CMS</h3>
+            <p class="bento__text">Dynamic UI architectures, custom CMS plugins and clean API integration.</p>
+            <div class="bento__chips">
+              <span class="chip">Next.js</span><span class="chip">React</span><span class="chip">Strapi</span><span class="chip">WordPress</span>
+            </div>
+          </article>
+
+          <article class="card bento__cell" data-reveal data-spotlight style="--reveal-delay:160ms">
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-cloud"/></svg></span>
+            <h3 class="bento__title">Cloud &amp; delivery</h3>
+            <p class="bento__text">Fault-tolerant cloud services, edge asset delivery and CI/CD pipelines.</p>
+            <div class="bento__chips">
+              <span class="chip">AWS</span><span class="chip">Docker</span><span class="chip">CloudFront</span><span class="chip">CI/CD</span>
+            </div>
+          </article>
+
+          <article class="card bento__cell" data-reveal data-spotlight style="--reveal-delay:240ms">
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-database"/></svg></span>
+            <h3 class="bento__title">Data &amp; AI</h3>
+            <p class="bento__text">Schema indexing, latency tuning and multimodal AI service pipelines.</p>
+            <div class="bento__chips">
+              <span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">MongoDB</span><span class="chip">OpenAI API</span>
+            </div>
+          </article>
+
+          <article class="card bento__cell bento__cell--wide" data-reveal data-spotlight>
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></span>
+            <h3 class="bento__title">Core proficiency</h3>
+            <div class="meters">
+              <div class="meter" style="--level:95%">
+                <div class="meter__head"><span>TypeScript &amp; Node.js</span><span>Expert</span></div>
+                <div class="meter__track"><div class="meter__fill"></div></div>
+              </div>
+              <div class="meter" style="--level:88%">
+                <div class="meter__head"><span>AWS &amp; cloud infrastructure</span><span>Advanced</span></div>
+                <div class="meter__track"><div class="meter__fill"></div></div>
+              </div>
+              <div class="meter" style="--level:85%">
+                <div class="meter__head"><span>Databases &amp; query tuning</span><span>Advanced</span></div>
+                <div class="meter__track"><div class="meter__fill"></div></div>
+              </div>
+              <div class="meter" style="--level:80%">
+                <div class="meter__head"><span>Next.js &amp; React</span><span>Proficient</span></div>
+                <div class="meter__track"><div class="meter__fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card bento__cell bento__cell--wide" data-reveal data-spotlight style="--reveal-delay:80ms">
+            <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-terminal"/></svg></span>
+            <h3 class="bento__title">Also in the toolkit</h3>
+            <div class="bento__chips">
+              <span class="chip">JWT</span><span class="chip">OAuth 2.0</span><span class="chip">RBAC</span>
+              <span class="chip">Rate limiting</span><span class="chip">Redis</span><span class="chip">Webhooks</span>
+              <span class="chip">Git</span><span class="chip">Linux</span><span class="chip">Nginx</span>
+              <span class="chip">Prisma</span><span class="chip">Jest</span><span class="chip">Postman</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         Selected work
+         ================================================================== -->
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-reveal>
+            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-branch"/></svg>
+            Selected work
+          </span>
+          <h2 class="h2" data-reveal style="--reveal-delay:60ms">Systems I've designed and shipped</h2>
+          <p class="lead" data-reveal style="--reveal-delay:120ms">
+            Production work delivered at Schbang. Client-facing repositories are private,
+            so these are described by architecture and outcome.
+          </p>
+        </div>
+
+        <div class="projects">
+          <article class="card project card--interactive" data-reveal data-spotlight>
+            <header class="project__head">
+              <div>
+                <h3 class="project__title">Schbang Pulse</h3>
+                <p class="project__kind">Observability platform</p>
+              </div>
+              <span class="project__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-activity"/></svg></span>
+            </header>
+            <p class="project__text">
+              Real-time API monitoring with uptime tracking and automated alerting. Streams
+              live service health to the dashboard over Server-Sent Events instead of
+              polling, so incidents surface the moment they start.
+            </p>
+            <dl class="project__impact">
+              <div><dt>Transport</dt><dd>SSE streams</dd></div>
+              <div><dt>Stack</dt><dd>TypeScript · Node</dd></div>
+            </dl>
+          </article>
+
+          <article class="card project card--interactive" data-reveal data-spotlight style="--reveal-delay:80ms">
+            <header class="project__head">
+              <div>
+                <h3 class="project__title">AI WhatsApp Assistant</h3>
+                <p class="project__kind">Messaging backend</p>
+              </div>
+              <span class="project__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-zap"/></svg></span>
+            </header>
+            <p class="project__text">
+              AI-driven chatbot backend built for high-volume inbound webhooks. AWS SQS
+              decouples ingestion from processing and gives every job a durable retry path;
+              SES handles transactional delivery.
+            </p>
+            <dl class="project__impact">
+              <div><dt>Queue</dt><dd>AWS SQS</dd></div>
+              <div><dt>Jobs</dt><dd>Retry-safe</dd></div>
+            </dl>
+          </article>
+
+          <article class="card project card--interactive" data-reveal data-spotlight style="--reveal-delay:160ms">
+            <header class="project__head">
+              <div>
+                <h3 class="project__title">Auth &amp; API Hardening</h3>
+                <p class="project__kind">Security layer</p>
+              </div>
+              <span class="project__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></span>
+            </header>
+            <p class="project__text">
+              Shared authentication and authorisation layer across services: JWT sessions,
+              Google OAuth sign-in, role-based access control and per-route rate limiting
+              to blunt abuse.
+            </p>
+            <dl class="project__impact">
+              <div><dt>Identity</dt><dd>JWT · OAuth</dd></div>
+              <div><dt>Access</dt><dd>RBAC</dd></div>
+            </dl>
+          </article>
+
+          <article class="card project card--interactive" data-reveal data-spotlight>
+            <header class="project__head">
+              <div>
+                <h3 class="project__title">Query Performance Program</h3>
+                <p class="project__kind">Database optimisation</p>
+              </div>
+              <span class="project__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-database"/></svg></span>
+            </header>
+            <p class="project__text">
+              Audited and reindexed hot paths across PostgreSQL, MySQL and MongoDB.
+              Rewrote the worst offenders and corrected schema-level indexing decisions
+              that only showed up under peak load.
+            </p>
+            <dl class="project__impact">
+              <div><dt>Peak latency</dt><dd>Down 40%</dd></div>
+              <div><dt>Engines</dt><dd>Three</dd></div>
+            </dl>
+          </article>
+
+          <article class="card project card--interactive" data-reveal data-spotlight style="--reveal-delay:80ms">
+            <header class="project__head">
+              <div>
+                <h3 class="project__title">Edge Asset Pipeline</h3>
+                <p class="project__kind">Cloud delivery</p>
+              </div>
+              <span class="project__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-cloud"/></svg></span>
+            </header>
+            <p class="project__text">
+              Cloud-native media pipeline on S3 with CloudFront in front of it, so assets
+              are served from the edge with sane cache behaviour instead of hitting origin
+              on every request.
+            </p>
+            <dl class="project__impact">
+              <div><dt>Origin</dt><dd>AWS S3</dd></div>
+              <div><dt>Delivery</dt><dd>CloudFront</dd></div>
+            </dl>
+          </article>
+
+          <article class="card project card--interactive" data-reveal data-spotlight style="--reveal-delay:160ms">
+            <header class="project__head">
+              <div>
+                <h3 class="project__title">CMS Page Builder</h3>
+                <p class="project__kind">Strapi &amp; Next.js</p>
+              </div>
+              <span class="project__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-layout"/></svg></span>
+            </header>
+            <p class="project__text">
+              Component-driven page building in Strapi wired to a Next.js frontend, letting
+              content teams compose layouts from typed section components without a
+              developer in the loop.
+            </p>
+            <dl class="project__impact">
+              <div><dt>CMS</dt><dd>Strapi</dd></div>
+              <div><dt>Frontend</dt><dd>Next.js</dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         GitHub activity — stats hydrate from the public API at runtime
+         ================================================================== -->
+    <section class="section" id="activity">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-reveal>
+            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"/></svg>
+            Activity
+          </span>
+          <h2 class="h2" data-reveal style="--reveal-delay:60ms">Live from GitHub</h2>
+          <p class="lead" data-reveal style="--reveal-delay:120ms">
+            Two accounts: day-to-day client work lives on the Schbang account,
+            personal projects on my own. Both graphs are pulled live.
+          </p>
+        </div>
+
+        <!-- Two accounts. Figures and calendars hydrate from public GitHub
+             endpoints at runtime; the handle and profile link are static so
+             each card still says something useful if the network fails. -->
+        <div class="gh-accounts">
+          <article class="card gh-account" data-gh-account="girish-soman" data-reveal data-spotlight>
+            <header class="gh-account__head">
+              <img class="gh-account__avatar" data-gh-avatar src="" alt="" width="44" height="44" loading="lazy" decoding="async">
+              <div class="gh-account__id">
+                <span class="gh-account__handle">@girish-soman</span>
+                <span class="gh-account__role">Work account · Schbang Digital Solutions</span>
+              </div>
+              <span class="badge badge--accent">Work</span>
+              <a class="btn btn--icon" href="https://github.com/girish-soman" target="_blank" rel="noopener noreferrer" aria-label="Open @girish-soman on GitHub">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+              </a>
+            </header>
+
+            <div class="gh-figures">
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="contributions">—</span>
+                <span class="gh-figure__label">Contributions · past year</span>
+              </div>
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="repos">—</span>
+                <span class="gh-figure__label">Public repos</span>
+              </div>
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="years">—</span>
+                <span class="gh-figure__label">Years on GitHub</span>
+              </div>
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="active">—</span>
+                <span class="gh-figure__label">Last push</span>
+              </div>
+            </div>
+
+            <div class="cal-wrap">
+              <div class="cal-scroll">
+                <div class="cal-inner">
+                  <div class="cal__months" data-cal-months aria-hidden="true"></div>
+                  <div class="cal" data-cal role="img" aria-label="Contribution calendar for @girish-soman over the past year"></div>
+                </div>
+              </div>
+              <div class="cal__foot">
+                <span class="cal__note" data-cal-note>Loading contribution data…</span>
+                <span class="cal__legend">
+                  Less
+                  <span class="cal__swatches" aria-hidden="true"><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i></span>
+                  More
+                </span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card gh-account" data-gh-account="giri943" data-reveal data-spotlight style="--reveal-delay:80ms">
+            <header class="gh-account__head">
+              <img class="gh-account__avatar" data-gh-avatar src="" alt="" width="44" height="44" loading="lazy" decoding="async">
+              <div class="gh-account__id">
+                <span class="gh-account__handle">@giri943</span>
+                <span class="gh-account__role">Personal account · side projects &amp; experiments</span>
+              </div>
+              <span class="badge">Personal</span>
+              <a class="btn btn--icon" href="https://github.com/giri943" target="_blank" rel="noopener noreferrer" aria-label="Open @giri943 on GitHub">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+              </a>
+            </header>
+
+            <div class="gh-figures">
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="contributions">—</span>
+                <span class="gh-figure__label">Contributions · past year</span>
+              </div>
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="repos">—</span>
+                <span class="gh-figure__label">Public repos</span>
+              </div>
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="years">—</span>
+                <span class="gh-figure__label">Years on GitHub</span>
+              </div>
+              <div class="gh-figure">
+                <span class="gh-figure__value is-loading" data-gh="language">—</span>
+                <span class="gh-figure__label">Most used language</span>
+              </div>
+            </div>
+
+            <div class="cal-wrap">
+              <div class="cal-scroll">
+                <div class="cal-inner">
+                  <div class="cal__months" data-cal-months aria-hidden="true"></div>
+                  <div class="cal" data-cal role="img" aria-label="Contribution calendar for @giri943 over the past year"></div>
+                </div>
+              </div>
+              <div class="cal__foot">
+                <span class="cal__note" data-cal-note>Loading contribution data…</span>
+                <span class="cal__legend">
+                  Less
+                  <span class="cal__swatches" aria-hidden="true"><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i></span>
+                  More
+                </span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         Contact
+         ================================================================== -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact" data-reveal data-spotlight>
+          <span class="eyebrow">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Available for senior roles
+          </span>
+          <h2 class="h2 contact__title">Let's build something that stays up.</h2>
+          <p class="lead contact__text">
+            Open to senior backend, full-stack and platform engineering roles. The fastest
+            way to reach me is email.
+          </p>
+
+          <div class="cluster" style="justify-content:center">
+            <a class="btn btn--primary btn--lg" href="mailto:giri943@gmail.com">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"/></svg>
+              giri943@gmail.com
+            </a>
+            <span class="copy-field">
+              <span>giri943@gmail.com</span>
+              <button class="btn btn--icon" type="button" data-copy="giri943@gmail.com" aria-label="Copy email address">
+                <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><use href="#i-copy"/></svg>
+              </button>
+            </span>
+          </div>
+
+          <div class="cluster" style="justify-content:center">
+            <a class="btn" href="https://github.com/giri943" target="_blank" rel="noopener noreferrer">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"/></svg> GitHub
+            </a>
+            <a class="btn" href="https://www.linkedin.com/in/girish-soman" target="_blank" rel="noopener noreferrer">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-linkedin"/></svg> LinkedIn
+            </a>
+            <button class="btn" type="button" data-print>
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-printer"/></svg> Save as PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <p class="footer__name">Girish Soman S G</p>
+        <p class="footer__note">Senior Software Engineer · Kerala, India · Remote</p>
+      </div>
+
+      <nav class="footer__links" aria-label="Social links">
+        <a class="social" href="mailto:giri943@gmail.com" aria-label="Email Girish">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"/></svg>
+        </a>
+        <a class="social" href="https://github.com/giri943" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"/></svg>
+        </a>
+        <a class="social" href="https://www.linkedin.com/in/girish-soman" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-linkedin"/></svg>
+        </a>
+      </nav>
+
+      <p class="footer__note mono">
+        Built with vanilla HTML, CSS &amp; JS · <span data-year>2026</span>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" data-to-top aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-up"/></svg>
+  </button>
+
+  <!-- Toast announcements are polite so they don't interrupt a screen reader mid-sentence -->
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/main.js" defer></script>
 </body>
-
 </html>
