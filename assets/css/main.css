@@ -1017,6 +1017,12 @@ h1, h2, h3, h4 {
 .project__impact dt { font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase; color: var(--text-tertiary); }
 .project__impact dd { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text); }
 
+/* Repo / live-demo links on project cards */
+.project__links { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.project__links .chip { gap: var(--space-1); }
+.project__links .chip:hover { color: var(--accent); border-color: var(--accent-ring); background: var(--accent-soft); }
+.project__links .chip svg { width: 11px; height: 11px; }
+
 /* GitHub activity — one card per account */
 .gh-accounts { display: grid; gap: var(--space-4); }
 .gh-account { display: flex; flex-direction: column; gap: var(--space-6); }
@@ -1168,7 +1174,13 @@ h1, h2, h3, h4 {
   font-size: var(--fs-xs);
   color: var(--text-secondary);
 }
-.copy-field > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.copy-field > span,
+.copy-field > a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.copy-field > a { transition: color var(--dur-fast) var(--ease-standard); }
+.copy-field > a:hover { color: var(--accent); }
+.copy-field > svg { width: 14px; height: 14px; flex: none; color: var(--accent); }
+
+.contact__details { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
 
 /* Footer */
 .footer { position: relative; z-index: var(--z-content); padding-block: var(--space-12); border-top: 1px solid var(--border); background: var(--bg); }
