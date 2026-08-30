@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found — Girish Soman</title>
+  <meta name="robots" content="noindex">
+
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230071e3'/%3E%3Ctext x='50%25' y='53%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='34' font-weight='700' fill='white'%3EG%3C/text%3E%3C/svg%3E">
+
+  <!-- Root-absolute, because GitHub Pages serves this file for any bad path at
+       any depth. A relative path would resolve against the missing directory. -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme') || 'system';
+        var dark = stored === 'dark' || (stored === 'system' &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+
+  <style>
+    .nf {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: var(--gutter);
+      position: relative;
+      z-index: 1;
+    }
+    .nf__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-6);
+      text-align: center;
+      max-width: 46ch;
+    }
+    .nf__code {
+      font-family: var(--font-mono);
+      font-size: clamp(4rem, 14vw, 8rem);
+      font-weight: var(--fw-bold);
+      line-height: 1;
+      letter-spacing: var(--tracking-tighter);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__blob ambient__blob--1"></div>
+    <div class="ambient__blob ambient__blob--2"></div>
+    <div class="ambient__grid"></div>
+    <div class="ambient__grain"></div>
+  </div>
+
+  <main class="nf">
+    <div class="nf__inner">
+      <span class="badge mono">HTTP 404</span>
+      <p class="nf__code text-gradient">404</p>
+      <h1 class="h2">This page doesn't exist.</h1>
+      <p class="lead">
+        The link may be out of date, or the address mistyped. Everything lives on
+        the one page anyway.
+      </p>
+      <a class="btn btn--primary btn--lg" href="/">Back to the portfolio</a>
+    </div>
+  </main>
+</body>
+</html>
