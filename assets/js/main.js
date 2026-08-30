@@ -485,8 +485,8 @@
     history.replaceState(null, '', hash);
   }
 
-  function copyText(value) {
-    const done = () => toast('Email copied to clipboard');
+  function copyText(value, label) {
+    const done = () => toast((label || 'Value') + ' copied to clipboard');
 
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(value).then(done).catch(fallback);
@@ -566,7 +566,9 @@
     { group: 'Navigate', icon: 'i-github', label: 'GitHub activity', keywords: 'contributions graph repos', run: () => go('#activity') },
     { group: 'Navigate', icon: 'i-mail', label: 'Contact', keywords: 'hire email reach out', run: () => go('#contact') },
 
-    { group: 'Actions', icon: 'i-copy', label: 'Copy email address', keywords: 'clipboard mail', hint: EMAIL, run: () => copyText(EMAIL) },
+    { group: 'Actions', icon: 'i-copy', label: 'Copy email address', keywords: 'clipboard mail', hint: EMAIL, run: () => copyText(EMAIL, 'Email address') },
+    { group: 'Actions', icon: 'i-phone', label: 'Copy primary phone', keywords: 'mobile call number', hint: '+91 94461 14870', run: () => copyText('+919446114870', 'Phone number') },
+    { group: 'Actions', icon: 'i-phone', label: 'Copy alternate phone', keywords: 'mobile call number', hint: '+91 70122 04262', run: () => copyText('+917012204262', 'Phone number') },
     { group: 'Actions', icon: 'i-mail', label: 'Send an email', keywords: 'contact hire', run: () => { window.location.href = 'mailto:' + EMAIL; } },
     { group: 'Actions', icon: 'i-download', label: 'Download CV', keywords: 'resume pdf cv', run: () => downloadCV() },
     { group: 'Actions', icon: 'i-printer', label: 'Print this page', keywords: 'print paper', run: () => window.print() },
@@ -849,7 +851,7 @@
     }
 
     $$('[data-copy]').forEach((btn) =>
-      btn.addEventListener('click', () => copyText(btn.dataset.copy))
+      btn.addEventListener('click', () => copyText(btn.dataset.copy, btn.dataset.copyLabel))
     );
 
     $$('[data-print]').forEach((btn) => btn.addEventListener('click', () => window.print()));
