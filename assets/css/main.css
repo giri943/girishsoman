@@ -791,14 +791,18 @@ h1, h2, h3, h4 {
    ========================================================================== */
 
 /* Hero */
+/* Column flow so the scroll cue sits below the content instead of being
+   absolutely positioned on top of it — at shorter viewport heights the
+   centred cue used to land on the social buttons and swallow their clicks. */
 .hero {
   position: relative;
   z-index: var(--z-content);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   min-height: min(100svh, 900px);
   padding-top: calc(var(--header-h) + var(--space-16));
-  padding-bottom: var(--space-16);
+  padding-bottom: var(--space-10);
 }
 .hero__grid { display: grid; gap: clamp(var(--space-10), 6vw, var(--space-16)); align-items: center; width: 100%; }
 .hero__content { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); }
@@ -809,9 +813,8 @@ h1, h2, h3, h4 {
 
 .scroll-cue {
   display: none;
-  position: absolute;
-  left: 50%; bottom: var(--space-8);
-  transform: translateX(-50%);
+  align-self: center;
+  margin-top: clamp(var(--space-8), 4vh, var(--space-16));
   align-items: center;
   gap: var(--space-2);
   font-family: var(--font-mono);
@@ -819,6 +822,8 @@ h1, h2, h3, h4 {
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   color: var(--text-tertiary);
+  /* Purely decorative — must never intercept a click */
+  pointer-events: none;
 }
 .scroll-cue__rail { position: relative; width: 1px; height: 44px; overflow: hidden; background: var(--border); }
 .scroll-cue__rail::after {
@@ -1278,6 +1283,11 @@ h1, h2, h3, h4 {
 
 @media (min-width: 768px) {
   .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Only surface the scroll cue when the viewport is actually tall enough for it
+   to sit clear of the hero content. */
+@media (min-width: 768px) and (min-height: 780px) {
   .scroll-cue { display: flex; flex-direction: column; }
 }
 
