@@ -514,6 +514,49 @@
   }
 
   const EMAIL = 'giri943@gmail.com';
+  const CV_PATH = 'assets/cv/Girish-Soman-Senior-Software-Engineer.pdf';
+  const CV_FILENAME = 'Girish-Soman-Senior-Software-Engineer.pdf';
+
+  /* Trigger the actual file download. Verified with a HEAD request first so a
+     missing or not-yet-added PDF degrades to the print view rather than
+     dumping the visitor on a 404. */
+  function downloadCV(href) {
+    const url = href || CV_PATH;
+
+    const send = () => {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = CV_FILENAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+
+    /* fetch() cannot inspect file:// URLs, so only guard over http(s) */
+    if (!/^https?:/.test(window.location.protocol)) {
+      send();
+      return;
+    }
+
+    fetch(url, { method: 'HEAD' })
+      .then((res) => {
+        if (!res.ok) throw new Error('cv missing ' + res.status);
+        send();
+      })
+      .catch(() => {
+        toast('CV file not uploaded yet — opening print view');
+        setTimeout(() => window.print(), 700);
+      });
+  }
+
+  function initCV() {
+    $$('[data-cv]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        downloadCV(link.getAttribute('href'));
+      });
+    });
+  }
 
   const COMMANDS = [
     { group: 'Navigate', icon: 'i-code', label: 'About', keywords: 'intro bio how i work', run: () => go('#about') },
@@ -525,7 +568,8 @@
 
     { group: 'Actions', icon: 'i-copy', label: 'Copy email address', keywords: 'clipboard mail', hint: EMAIL, run: () => copyText(EMAIL) },
     { group: 'Actions', icon: 'i-mail', label: 'Send an email', keywords: 'contact hire', run: () => { window.location.href = 'mailto:' + EMAIL; } },
-    { group: 'Actions', icon: 'i-printer', label: 'Save CV as PDF', keywords: 'print download resume', run: () => window.print() },
+    { group: 'Actions', icon: 'i-download', label: 'Download CV', keywords: 'resume pdf cv', run: () => downloadCV() },
+    { group: 'Actions', icon: 'i-printer', label: 'Print this page', keywords: 'print paper', run: () => window.print() },
     { group: 'Actions', icon: 'i-arrow-up', label: 'Back to top', keywords: 'scroll home', run: () => window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' }) },
 
     { group: 'Theme', icon: 'i-sun', label: 'Light theme', keywords: 'bright day', run: () => theme.set('light') },
@@ -831,6 +875,7 @@
     initDrawer();
     initPalette();
     initGitHub();
+    initCV();
     initMisc();
 
     window.addEventListener('scroll', onScroll, { passive: true });
