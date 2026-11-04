@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Update this if you move to a custom domain.
-Sitemap: https://giri943.github.io/sitemap.xml
+Sitemap: https://giri943.github.io/girishsoman/sitemap.xml
