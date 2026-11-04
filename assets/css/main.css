@@ -520,19 +520,23 @@ h1, h2, h3, h4 {
 }
 
 .brand__mark {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 28px; height: 28px;
-  border-radius: var(--radius-sm);
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
   background: linear-gradient(135deg, var(--accent), color-mix(in oklab, var(--accent) 45%, #a855f7));
   color: #fff;
   font-size: 0.8rem;
   font-weight: var(--fw-bold);
   letter-spacing: -0.05em;
-  box-shadow: 0 4px 14px -4px var(--accent-ring);
-  transition: transform var(--dur-base) var(--ease-spring);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--accent-ring), 0 4px 14px -4px var(--accent-ring);
+  transition: transform var(--dur-base) var(--ease-spring), box-shadow var(--dur-base) var(--ease-standard);
 }
-.brand:hover .brand__mark { transform: rotate(-8deg) scale(1.06); }
+/* GitHub photo sits over the "G", which stays as the fallback if it fails to load */
+.brand__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.brand:hover .brand__mark { transform: scale(1.08); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--accent), 0 6px 18px -4px var(--accent-ring); }
 .brand__punct { color: var(--accent); }
 
 /* Nav with a sliding pill indicator behind the active link */
@@ -1023,6 +1027,51 @@ h1, h2, h3, h4 {
 .project__links .chip:hover { color: var(--accent); border-color: var(--accent-ring); background: var(--accent-soft); }
 .project__links .chip svg { width: 11px; height: 11px; }
 
+/* Work has four content-heavy cards: two columns reads better than 3 + 1 */
+@media (min-width: 768px) {
+  .projects--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Open source */
+.oss { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-4); }
+.oss-card { display: flex; flex-direction: column; gap: var(--space-4); }
+.oss-card__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.oss-card__head .icon-tile { margin: 0; }
+.oss-card__version { font-family: var(--font-mono); }
+.oss-card__features { display: grid; gap: var(--space-2); }
+.oss-card__features li { display: flex; gap: var(--space-2); font-size: var(--fs-xs); line-height: 1.55; color: var(--text-secondary); }
+.oss-card__features svg { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--success); }
+.oss-card__install {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.oss-card__install code {
+  flex: 1;
+  min-width: 0;
+  padding-block: var(--space-1);
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text);
+}
+.oss-card__install code span { color: var(--accent); }
+.oss-card__install .btn--icon { flex: none; width: 30px; height: 30px; }
+.oss-card__foot { display: grid; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border); }
+/* Keeps its line even while empty, so every card's footer lines up */
+.oss-card__downloads { min-height: 1.5em; font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--text-tertiary); }
+.oss-card__downloads strong { color: var(--text); font-weight: var(--fw-semibold); }
+.oss__more { margin-top: var(--space-6); text-align: center; font-size: var(--fs-sm); }
+.oss__more a { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--accent); }
+.oss__more a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.oss__more svg { width: 13px; height: 13px; }
+
 /* GitHub activity — one card per account */
 .gh-accounts { display: grid; gap: var(--space-4); }
 .gh-account { display: flex; flex-direction: column; gap: var(--space-6); }
@@ -1303,9 +1352,12 @@ h1, h2, h3, h4 {
   .scroll-cue { display: flex; flex-direction: column; }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .nav, .palette-trigger { display: flex; }
   .menu-btn { display: none; }
+}
+
+@media (min-width: 900px) {
   .hero__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
 }
 
