@@ -451,7 +451,7 @@
     );
 
     /* If the viewport grows past the breakpoint the drawer is no longer reachable */
-    window.matchMedia('(min-width: 900px)').addEventListener('change', (e) => {
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
       if (e.matches) drawer.close();
     });
   }
@@ -563,6 +563,7 @@
     { group: 'Navigate', icon: 'i-briefcase', label: 'Experience', keywords: 'role job schbang career', run: () => go('#experience') },
     { group: 'Navigate', icon: 'i-layers', label: 'Skills', keywords: 'capabilities stack tech', run: () => go('#skills') },
     { group: 'Navigate', icon: 'i-branch', label: 'Selected work', keywords: 'projects portfolio pulse', run: () => go('#work') },
+    { group: 'Navigate', icon: 'i-package', label: 'Open source', keywords: 'strapi plugins npm packages oss csv webp azure', run: () => go('#open-source') },
     { group: 'Navigate', icon: 'i-github', label: 'GitHub activity', keywords: 'contributions graph repos', run: () => go('#activity') },
     { group: 'Navigate', icon: 'i-mail', label: 'Contact', keywords: 'hire email reach out', run: () => go('#contact') },
 
@@ -579,7 +580,11 @@
     { group: 'Theme', icon: 'i-monitor', label: 'Match system theme', keywords: 'auto os default', run: () => theme.set('system') },
 
     { group: 'Links', icon: 'i-github', label: 'Open GitHub profile', keywords: 'code repos', run: () => window.open('https://github.com/giri943', '_blank', 'noopener') },
-    { group: 'Links', icon: 'i-linkedin', label: 'Open LinkedIn profile', keywords: 'network cv', run: () => window.open('https://www.linkedin.com/in/girish-soman', '_blank', 'noopener') }
+    { group: 'Links', icon: 'i-linkedin', label: 'Open LinkedIn profile', keywords: 'network cv', run: () => window.open('https://www.linkedin.com/in/girish-soman', '_blank', 'noopener') },
+    { group: 'Links', icon: 'i-package', label: 'Open npm profile', keywords: 'packages plugins strapi', run: () => window.open('https://www.npmjs.com/~giri943', '_blank', 'noopener') },
+    { group: 'Links', icon: 'i-layers', label: 'CSV Import & Export plugin', keywords: 'strapi npm bulk csv', run: () => window.open('https://www.npmjs.com/package/strapi-plugin-csv-import-export', '_blank', 'noopener') },
+    { group: 'Links', icon: 'i-shield', label: 'Media WebP Converter plugin', keywords: 'strapi npm upload security image', run: () => window.open('https://www.npmjs.com/package/strapi-plugin-media-webp-convertor', '_blank', 'noopener') },
+    { group: 'Links', icon: 'i-cloud', label: 'Azure Blob Storage provider', keywords: 'strapi npm upload storage', run: () => window.open('https://www.npmjs.com/package/strapi-provider-upload-azure-blob', '_blank', 'noopener') }
   ];
 
   let results = [];
@@ -841,6 +846,43 @@
     });
   }
 
+  /* ---------------------------------------------------- npm integration */
+
+  /* Version and monthly downloads per plugin card. The static markup already
+     names the package and links to it, so a failed request just leaves the
+     placeholders in place. */
+  function initNpm() {
+    const cards = $$('[data-npm]');
+    if (!cards.length) return;
+
+    const names = cards.map((card) => card.dataset.npm);
+
+    cards.forEach((card) => {
+      fetch(`https://registry.npmjs.org/${card.dataset.npm}/latest`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((pkg) => {
+          const badge = $('[data-npm-version]', card);
+          if (badge && pkg && pkg.version) badge.textContent = 'v' + pkg.version;
+        })
+        .catch(() => {});
+    });
+
+    /* One bulk request for every unscoped package. A package too new to have
+       stats is simply missing from the response. */
+    fetch(`https://api.npmjs.org/downloads/point/last-month/${names.join(',')}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data) return;
+        cards.forEach((card) => {
+          const entry = names.length === 1 ? data : data[card.dataset.npm];
+          const el = $('[data-npm-downloads]', card);
+          if (!el || !entry || !entry.downloads) return;
+          el.innerHTML = `<strong>${entry.downloads.toLocaleString()}</strong> downloads last month`;
+        });
+      })
+      .catch(() => {});
+  }
+
   /* ------------------------------------------------------ small bindings */
   function initMisc() {
     /* Show the correct modifier key for the platform */
@@ -877,6 +919,7 @@
     initDrawer();
     initPalette();
     initGitHub();
+    initNpm();
     initCV();
     initMisc();
 
