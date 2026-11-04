@@ -160,7 +160,6 @@
 
   /* -------------------------------------------------- scroll-driven chrome */
   const header = $('#header');
-  const progressBar = $('.scroll-progress');
   const toTopBtn = $('[data-to-top]');
   const nav = $('#primary-nav');
   const navIndicator = $('.nav__indicator', nav || document);
@@ -213,11 +212,6 @@
 
     if (header) header.setAttribute('data-condensed', String(y > 8));
     if (toTopBtn) toTopBtn.setAttribute('data-visible', String(y > 600));
-
-    if (progressBar) {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      progressBar.style.setProperty('--progress', max > 0 ? String(clamp(y / max, 0, 1)) : '0');
-    }
 
     updateScrollSpy();
   });
@@ -289,82 +283,8 @@
   }
 
   /* ===================================================================
-     Part 2: pointer effects, overlays, command palette, integrations
+     Part 2: overlays, command palette, integrations
      =================================================================== */
-
-  /* ------------------------------------------------------ pointer effects */
-
-  /* Cards track the cursor to position their spotlight and glowing border */
-  function initSpotlight() {
-    const cards = $$('[data-spotlight]');
-    if (!cards.length || !window.matchMedia('(hover: hover)').matches) return;
-
-    cards.forEach((card) => {
-      const move = rafThrottle((event) => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
-        card.style.setProperty('--my', `${event.clientY - rect.top}px`);
-      });
-
-      card.addEventListener('pointermove', move);
-      card.addEventListener('pointerleave', () => {
-        card.style.setProperty('--mx', '50%');
-        card.style.setProperty('--my', '50%');
-      });
-    });
-  }
-
-  /* Subtle parallax tilt on the hero terminal */
-  function initTilt() {
-    const target = $('[data-tilt]');
-    if (!target || prefersReducedMotion() || !window.matchMedia('(hover: hover)').matches) return;
-
-    const MAX = 5; /* degrees */
-
-    const move = rafThrottle((event) => {
-      const rect = target.getBoundingClientRect();
-      const px = (event.clientX - rect.left) / rect.width - 0.5;
-      const py = (event.clientY - rect.top) / rect.height - 0.5;
-      target.style.transform =
-        `perspective(1000px) rotateY(${px * MAX * 2}deg) rotateX(${-py * MAX * 2}deg)`;
-    });
-
-    target.addEventListener('pointermove', move);
-    target.addEventListener('pointerleave', () => {
-      target.style.transform = '';
-    });
-  }
-
-  /* Terminal lines fade in sequentially, like output arriving */
-  function initTypewriter() {
-    const body = $('[data-typewriter]');
-    if (!body) return;
-
-    const lines = Array.from(body.children);
-    if (prefersReducedMotion()) return;
-
-    lines.forEach((line, i) => {
-      line.style.opacity = '0';
-      line.style.transform = 'translateY(4px)';
-      line.style.transition = 'opacity 340ms ease, transform 340ms ease';
-      setTimeout(() => {
-        line.style.opacity = '1';
-        line.style.transform = 'none';
-      }, 500 + i * 220);
-    });
-  }
-
-  /* A second identical track makes the marquee loop without a visible seam */
-  function initMarquee() {
-    const marquee = $('[data-marquee]');
-    if (!marquee) return;
-    const track = $('.marquee__track', marquee);
-    if (!track) return;
-
-    const clone = track.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    marquee.appendChild(clone);
-  }
 
   /* ------------------------------------------------------------ overlays */
 
@@ -912,10 +832,6 @@
   function init() {
     theme.init();
     initReveals();
-    initSpotlight();
-    initTilt();
-    initTypewriter();
-    initMarquee();
     initDrawer();
     initPalette();
     initGitHub();
