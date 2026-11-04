@@ -2,7 +2,7 @@
 <!-- Single-page site, so one entry. Update <loc> if you move to a custom domain. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://giri943.github.io/</loc>
+    <loc>https://giri943.github.io/girishsoman/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
