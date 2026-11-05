@@ -654,21 +654,39 @@
           </p>
         </div>
 
-        <!-- Showcase reels. One <video>; the segmented control picks the reel and
-             the colour theme picks the dark or light render. main.js loads a reel
-             only near the viewport and plays it while visible (not with reduced motion). -->
+        <!-- Showcase theater. One <video>; the tabs under it pick the reel and the
+             colour theme picks its dark or light render. main.js loads a reel only
+             near the viewport and plays it while visible (not with reduced motion).
+             Visually the frame sits above the controls; in source order the tabs come
+             first, as the tabs pattern expects. -->
         <figure class="showcase" data-reveal data-showcase>
-          <div class="showcase__tabs" role="tablist" aria-label="Plugin demos">
-            <span class="showcase__tabs-thumb" aria-hidden="true" data-showcase-thumb></span>
-            <button class="showcase__tab" type="button" role="tab" id="reel-tab-csv" aria-selected="true"
-                    aria-controls="reel-panel" data-reel="assets/video/csv-import-export"
-                    data-label="Screen recording: importing a CSV of 12 articles into Strapi with the CSV Import and Export plugin. A dry run lists four bad rows with reasons, the fixed file imports all 12, then the export dialog is shown.">
-              CSV Import &amp; Export
-            </button>
-            <button class="showcase__tab" type="button" role="tab" id="reel-tab-webp" aria-selected="false" tabindex="-1"
-                    aria-controls="reel-panel" data-reel="assets/video/webp-converter"
-                    data-label="Screen recording: a 1.2 MB JPEG uploaded to the Strapi Media Library is stored as a 758 KB WebP, an SVG containing a script is refused, then six existing images are bulk-converted, saving 46%.">
-              WebP Converter
+          <div class="showcase__controls">
+            <div class="showcase__tabs" role="tablist" aria-label="Plugin demos">
+              <span class="showcase__tabs-thumb" aria-hidden="true" data-showcase-thumb></span>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-csv" aria-selected="true"
+                      aria-controls="reel-panel" data-reel="assets/video/csv-import-export"
+                      data-label="Screen recording: importing a CSV of 12 articles into Strapi with the CSV Import and Export plugin. A dry run lists four bad rows with reasons, the fixed file imports all 12, then the export dialog is shown.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/csv-import-export.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">CSV Import &amp; Export</span>
+                <span class="showcase__tab-short" aria-hidden="true">CSV</span>
+              </button>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-webp" aria-selected="false" tabindex="-1"
+                      aria-controls="reel-panel" data-reel="assets/video/webp-converter"
+                      data-label="Screen recording: a 1.2 MB JPEG uploaded to the Strapi Media Library is stored as a 758 KB WebP, an SVG containing a script is refused, then six existing images are bulk-converted, saving 46%.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/webp-converter.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">WebP Converter</span>
+                <span class="showcase__tab-short" aria-hidden="true">WebP</span>
+              </button>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-azure" aria-selected="false" tabindex="-1"
+                      aria-controls="reel-panel" data-reel="assets/video/azure-blob"
+                      data-label="Screen recording and terminal output: six photos uploaded through the Strapi Media Library are stored as 30 blobs in a private Azure container. The plain URL is refused with 403, the signed URL returns 200, and the same signed URL is refused once it expires.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/azure-blob.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">Azure Blob</span>
+                <span class="showcase__tab-short" aria-hidden="true">Azure</span>
+              </button>
+            </div>
+            <button class="showcase__toggle" type="button" data-showcase-toggle aria-label="Pause video">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pause"/></svg>
             </button>
           </div>
 
@@ -676,20 +694,19 @@
             <video class="showcase__video" muted loop playsinline preload="none"
                    width="1280" height="800"
                    poster="assets/video/csv-import-export-dark.jpg"></video>
-            <button class="showcase__toggle" type="button" data-showcase-toggle aria-label="Pause video">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pause"/></svg>
-            </button>
           </div>
 
-          <figcaption class="showcase__caption" data-caption-for="assets/video/csv-import-export">
-            <strong>CSV Import &amp; Export in action.</strong>
-            A dry run catches four bad rows before anything is written, the fixed file imports all 12,
-            and the same menu exports them back out. Recorded in the plugin's own playground.
-          </figcaption>
-          <figcaption class="showcase__caption" data-caption-for="assets/video/webp-converter" hidden>
-            <strong>WebP Converter &amp; Upload Guard in action.</strong>
-            A 1.2 MB JPEG is stored as a 758 KB WebP, an SVG hiding a script is refused before it
-            reaches storage, and six existing images convert in one click, 46% smaller.
+          <figcaption class="showcase__captions">
+            <p class="showcase__caption" data-caption-for="assets/video/csv-import-export">
+              <strong>CSV Import &amp; Export.</strong> A dry run catches four bad rows before anything is written; the fixed file imports all 12.
+            </p>
+            <p class="showcase__caption" data-caption-for="assets/video/webp-converter" hidden>
+              <strong>WebP Converter &amp; Upload Guard.</strong> A 1.2 MB JPEG is stored as a 758 KB WebP, a scripted SVG is refused, and an old library converts 46% smaller.
+            </p>
+            <p class="showcase__caption" data-caption-for="assets/video/azure-blob" hidden>
+              <strong>Azure Blob Storage Provider.</strong> Uploads land in a private container; only signed links work, and they expire on time. Recorded against Azurite.
+            </p>
+            <p class="showcase__hint">Tap the film to watch it full screen.</p>
           </figcaption>
         </figure>
 
@@ -723,6 +740,9 @@
             <footer class="oss-card__foot">
               <span class="oss-card__downloads" data-npm-downloads></span>
               <div class="project__links">
+                <button class="chip chip--play" type="button" data-reel-target="assets/video/csv-import-export">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg> Watch the demo
+                </button>
                 <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-csv-import-export" target="_blank" rel="noopener noreferrer">
                   npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
                 </a>
@@ -761,6 +781,9 @@
             <footer class="oss-card__foot">
               <span class="oss-card__downloads" data-npm-downloads></span>
               <div class="project__links">
+                <button class="chip chip--play" type="button" data-reel-target="assets/video/webp-converter">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg> Watch the demo
+                </button>
                 <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-media-webp-convertor" target="_blank" rel="noopener noreferrer">
                   npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
                 </a>
@@ -799,6 +822,9 @@
             <footer class="oss-card__foot">
               <span class="oss-card__downloads" data-npm-downloads></span>
               <div class="project__links">
+                <button class="chip chip--play" type="button" data-reel-target="assets/video/azure-blob">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg> Watch the demo
+                </button>
                 <a class="chip" href="https://www.npmjs.com/package/strapi-provider-upload-azure-blob" target="_blank" rel="noopener noreferrer">
                   npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
                 </a>

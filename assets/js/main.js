@@ -905,6 +905,31 @@
     window.addEventListener('resize', rafThrottle(moveThumb));
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveThumb);
 
+    /* Plugin cards: "Watch the demo" picks that reel, brings the theater into
+       view and plays it, since the visitor asked for it explicitly */
+    $$('[data-reel-target]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const tab = tabs.find((t) => t.dataset.reel === button.dataset.reelTarget);
+        if (!tab) return;
+        userPaused = false;
+        select(tab, false);
+        root.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' });
+        load();
+        video.play().catch(() => {});
+      });
+    });
+
+    /* Phones: the film is composed for a wide screen, so a tap opens it full screen */
+    const phone = window.matchMedia('(max-width: 640px)');
+    video.addEventListener('click', () => {
+      if (!phone.matches) return;
+      userPaused = false;
+      load();
+      video.play().catch(() => {});
+      if (video.requestFullscreen) video.requestFullscreen().catch(() => {});
+      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+    });
+
     if (!('IntersectionObserver' in window)) { inView = true; sync(); return; }
     new IntersectionObserver((entries) => {
       inView = entries[0].isIntersecting;

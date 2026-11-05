@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Azure Blob Storage provider">
+  <!-- Cloud with an upload arrow, on a tile matching the other plugin marks -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3a9bff"/>
+      <stop offset="1" stop-color="#0058c4"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M168 352h188a68 68 0 0 0 10-135 100 100 0 0 0-190-22 80 80 0 0 0-8 157z" fill="#fff"/>
+  <path d="M256 330V238M220 272l36-36 36 36" fill="none" stroke="#0a6ae0" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
