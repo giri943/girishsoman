@@ -683,6 +683,34 @@
     return day.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
+  /* GitHub allows 60 anonymous API requests an hour per IP address, and people
+     on a shared network (an office, some mobile carriers) share that budget.
+     Responses are cached in the browser for six hours, trimmed to the fields the
+     page uses; if GitHub refuses a request, the last good copy is shown instead. */
+  const GH_CACHE_MS = 6 * 60 * 60 * 1000;
+
+  function cachedJSON(url, pick) {
+    const key = 'gh-cache:' + url;
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem(key)); } catch (e) { cached = null; }
+    if (cached && Date.now() - cached.at < GH_CACHE_MS) return Promise.resolve(cached.data);
+
+    return fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error(url + ' ' + res.status);
+        return res.json();
+      })
+      .then((json) => {
+        const data = pick(json);
+        try { localStorage.setItem(key, JSON.stringify({ at: Date.now(), data })); } catch (e) { /* storage full or blocked */ }
+        return data;
+      })
+      .catch((error) => {
+        if (cached) return cached.data;
+        throw error;
+      });
+  }
+
   function initGitHub() {
     const cards = $$('[data-gh-account]');
     if (!cards.length) return;
@@ -705,19 +733,13 @@
       let activeFromCalendar = false;
       let pushedFallback = null;
 
-      /* Profile: avatar, repo count, account age, freshest public push */
-      fetch(`https://api.github.com/users/${user}`)
-        .then((res) => {
-          if (!res.ok) throw new Error('profile ' + res.status);
-          return res.json();
-        })
+      /* Profile: repo count, account age, freshest public push. The avatar comes
+         from github.com/<user>.png in the markup, which does not use the API. */
+      cachedJSON(`https://api.github.com/users/${user}`, (d) => ({
+        public_repos: d.public_repos,
+        created_at: d.created_at
+      }))
         .then((data) => {
-          const avatar = $('[data-gh-avatar]', card);
-          if (avatar && data.avatar_url) {
-            avatar.src = data.avatar_url + '&s=88';
-            avatar.alt = `${user} avatar`;
-          }
-
           fill('repos', String(data.public_repos ?? '—'));
 
           if (data.created_at) {
@@ -728,9 +750,11 @@
             fill('years', String(years));
           }
 
-          return fetch(`https://api.github.com/users/${user}/repos?per_page=100&sort=pushed`);
+          return cachedJSON(
+            `https://api.github.com/users/${user}/repos?per_page=100&sort=pushed`,
+            (list) => (Array.isArray(list) ? list.map((r) => ({ language: r.language, pushed_at: r.pushed_at })) : [])
+          ).catch(() => []);
         })
-        .then((res) => (res && res.ok ? res.json() : []))
         .then((repos) => {
           if (!Array.isArray(repos) || !repos.length) return;
 
