@@ -794,8 +794,8 @@
 
   /* ----------------------------------------------------- showcase reels */
 
-  /* One <video> for every reel. The segmented control picks the reel, the
-     colour theme picks its dark or light render. Nothing downloads until the
+  /* One <video> for every reel. The segmented control picks the plugin (its
+     film and its panel), the colour theme picks the film's dark or light render. Nothing downloads until the
      showcase is near the viewport, it only plays while visible, and with
      reduced motion on it waits for the visitor to press play. */
   function initShowcase() {
@@ -804,7 +804,7 @@
     const toggle = root && $('[data-showcase-toggle]', root);
     const tabs = root ? $$('[role="tab"]', root) : [];
     const thumb = root && $('[data-showcase-thumb]', root);
-    const panel = root && $('[role="tabpanel"]', root);
+    const panels = root ? $$('.reel-panel', root) : [];
     if (!video || !toggle || !tabs.length) return;
 
     /* H.264 MP4 only: it plays everywhere, and the VP9 render came out larger */
@@ -868,8 +868,12 @@
         t.tabIndex = on ? 0 : -1;
       });
       current = tab;
-      if (panel) panel.setAttribute('aria-labelledby', tab.id);
-      $$('[data-caption-for]', root).forEach((c) => { c.hidden = c.dataset.captionFor !== tab.dataset.reel; });
+      /* Inactive panels stay in the page (search, print) but are hidden and inert */
+      panels.forEach((p) => {
+        const on = p.dataset.panelFor === tab.dataset.reel;
+        if (on) p.removeAttribute('aria-hidden'); else p.setAttribute('aria-hidden', 'true');
+        p.inert = !on;
+      });
       if (focus) tab.focus();
       moveThumb();
       applySource(false);
@@ -904,20 +908,6 @@
     moveThumb();
     window.addEventListener('resize', rafThrottle(moveThumb));
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveThumb);
-
-    /* Plugin cards: "Watch the demo" picks that reel, brings the theater into
-       view and plays it, since the visitor asked for it explicitly */
-    $$('[data-reel-target]').forEach((button) => {
-      button.addEventListener('click', () => {
-        const tab = tabs.find((t) => t.dataset.reel === button.dataset.reelTarget);
-        if (!tab) return;
-        userPaused = false;
-        select(tab, false);
-        root.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' });
-        load();
-        video.play().catch(() => {});
-      });
-    });
 
     /* Phones: the film is composed for a wide screen, so a tap opens it full screen */
     const phone = window.matchMedia('(max-width: 640px)');

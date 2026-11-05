@@ -827,33 +827,34 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
   .projects--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Showcase theater: a framed film, controls centred beneath it, one line of copy */
+/* Showcase: one unit per plugin. Tabs on top, the film, then that plugin's panel */
 .showcase {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-5);
-  margin-bottom: clamp(var(--space-12), 6vw, var(--space-16));
+  margin-bottom: var(--space-8);
 }
 
-/* The film's own stage colour fills the frame, so it reads as one object.
-   A hairline and a soft shadow give it an edge against the page. */
-.showcase__frame {
-  order: -1;
-  position: relative;
+/* One tile per plugin: the film on top, its details below. The hairline and
+   shadow belong to the tile, so film and panel read as a single object. */
+.showcase__unit {
   width: 100%;
-  aspect-ratio: 16 / 10;
   border-radius: var(--radius-xl);
   overflow: hidden;
+  background: var(--surface);
 }
-[data-theme='dark'] .showcase__frame {
-  background: #000;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 40px 120px -48px rgba(41, 151, 255, 0.35);
+[data-theme='dark'] .showcase__unit {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 120px -48px rgba(41, 151, 255, 0.3);
 }
-[data-theme='light'] .showcase__frame {
-  background: #f5f5f7;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.07), 0 34px 80px -44px rgba(0, 0, 0, 0.3);
+[data-theme='light'] .showcase__unit {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 34px 80px -44px rgba(0, 0, 0, 0.28);
 }
+
+/* The film's own stage colour fills the frame */
+.showcase__frame { position: relative; width: 100%; aspect-ratio: 16 / 10; }
+[data-theme='dark'] .showcase__frame { background: #000; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+[data-theme='light'] .showcase__frame { background: #f5f5f7; }
 .showcase__video { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .showcase__controls { display: flex; align-items: center; justify-content: center; gap: var(--space-3); }
@@ -915,10 +916,21 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
 .showcase__toggle:active { transform: scale(0.94); }
 .showcase__toggle svg { width: 15px; height: 15px; }
 
-.showcase__captions { max-width: 40rem; text-align: center; }
-.showcase__caption { font-size: var(--fs-sm); line-height: 1.55; color: var(--text-secondary); text-wrap: balance; }
-.showcase__caption strong { color: var(--text); font-weight: var(--fw-semibold); }
-.showcase__hint { display: none; margin-top: var(--space-2); font-size: var(--fs-xs); color: var(--text-tertiary); }
+/* Phones only: a small pill over the film */
+.showcase__hint {
+  display: none;
+  position: absolute;
+  left: var(--space-3); bottom: var(--space-3);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  color: #fff;
+  pointer-events: none;
+}
 
 /* Phones: short labels, and the film opens full screen on tap, where it is legible */
 @media (max-width: 640px) {
@@ -926,13 +938,44 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
   .showcase__tab-icon { width: 20px; height: 20px; }
   .showcase__tab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .showcase__tab-short { display: inline; }
-  .showcase__frame { border-radius: var(--radius-lg); cursor: zoom-in; }
+  .showcase__unit { border-radius: var(--radius-lg); }
+  .showcase__frame { cursor: zoom-in; }
   .showcase__hint { display: block; }
 }
 
-/* "Watch the demo" on each plugin card */
-.chip--play { gap: var(--space-1); cursor: pointer; }
-.chip--play svg { width: 10px; height: 10px; }
+/* The selected plugin's details. All three panels share one grid cell, so the
+   block is always as tall as the tallest and switching never moves the page. */
+.reel-panels { display: grid; width: 100%; }
+.reel-panel {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--space-6) clamp(var(--space-8), 5vw, var(--space-16));
+  align-items: start;
+  padding: clamp(var(--space-6), 3.5vw, 2.75rem);
+  transition: opacity var(--dur-slow) var(--ease-standard), visibility 0s linear 0s;
+}
+.reel-panel[aria-hidden='true'] {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-standard), visibility 0s linear var(--dur-base);
+}
+.reel-panel__story { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+.reel-panel__head { display: flex; align-items: center; gap: var(--space-4); }
+.reel-panel__icon { width: 48px; height: 48px; flex: none; border-radius: 12px; }
+.reel-panel__title { font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem); font-weight: var(--fw-semibold); letter-spacing: -0.025em; line-height: 1.15; }
+.reel-panel__pkg { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-1); }
+.reel-panel__pkg code { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--text-tertiary); }
+.reel-panel__text { font-size: var(--fs-body); line-height: 1.6; color: var(--text-secondary); }
+.reel-panel .oss-card__install { margin-top: 0; }
+.reel-panel__meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.reel-panel__meta .oss-card__downloads { min-height: 0; }
+.reel-panel__features { gap: var(--space-4); padding-top: var(--space-1); }
+.reel-panel__features li { font-size: var(--fs-sm); line-height: 1.55; }
+
+@media (max-width: 767px) {
+  .reel-panel { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* Open source */
 .oss { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-4); }
@@ -1248,6 +1291,7 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
     --surface: transparent; --fill: transparent; --fill-hover: transparent;
   }
   .header, .drawer, .palette, .to-top, .toast-region, .contact,
+  .showcase__controls, .showcase__frame, .showcase__hint,
   .cal-wrap, .skip-link { display: none !important; }
 
   body { background: #fff !important; color: #000 !important; font-size: 11pt; }
@@ -1256,4 +1300,6 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
   .card { border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
   a[href^='http']::after { content: ' (' attr(href) ')'; font-size: 8pt; color: #555; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .reel-panels { display: block; }
+  .reel-panel, .reel-panel[aria-hidden='true'] { visibility: visible !important; opacity: 1 !important; transition: none !important; margin-bottom: 1rem; }
 }
