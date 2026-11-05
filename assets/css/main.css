@@ -827,6 +827,35 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
   .projects--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* Showcase reel above the plugin cards */
+.showcase { margin-bottom: var(--space-6); }
+.showcase__frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--surface);
+}
+.showcase__video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.showcase__toggle {
+  position: absolute;
+  right: var(--space-4); bottom: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+.showcase__toggle:hover { transform: scale(1.06); }
+.showcase__toggle svg { width: 16px; height: 16px; }
+.showcase__caption { max-width: 48rem; margin-top: var(--space-4); font-size: var(--fs-sm); line-height: 1.55; color: var(--text-secondary); }
+.showcase__caption strong { color: var(--text); font-weight: var(--fw-semibold); }
+
 /* Open source */
 .oss { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-4); }
 .oss-card { display: flex; flex-direction: column; gap: var(--space-4); }

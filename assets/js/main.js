@@ -792,6 +792,82 @@
     });
   }
 
+  /* ------------------------------------------------------ showcase reel */
+
+  /* One <video>, two renders: a dark stage and a light one. Nothing downloads
+     until the reel is near the viewport, it only plays while visible, and with
+     reduced motion on it waits for the visitor to press play. */
+  function initShowcase() {
+    const root = $('[data-showcase]');
+    const video = root && $('video', root);
+    const toggle = root && $('[data-showcase-toggle]', root);
+    if (!video || !toggle) return;
+
+    /* H.264 MP4 only: it plays everywhere, and the VP9 render came out larger */
+    const ext = '.mp4';
+    const themeName = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    let userPaused = prefersReducedMotion();
+    let inView = false;
+    let loaded = false;
+
+    const setIcon = () => {
+      const playing = !video.paused;
+      $('use', toggle).setAttribute('href', playing ? '#i-pause' : '#i-play');
+      toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+    };
+
+    const applyTheme = () => {
+      const base = video.dataset[themeName() === 'light' ? 'srcLight' : 'srcDark'];
+      video.poster = base + '.jpg';
+      if (!loaded) return;
+      const at = video.currentTime;
+      const wasPlaying = !video.paused;
+      video.addEventListener('loadedmetadata', () => { video.currentTime = at; }, { once: true });
+      video.src = base + ext;
+      if (wasPlaying) video.play().catch(() => {});
+      else video.load();
+    };
+
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      /* From here on a source swap (theme change) may fetch straight away */
+      video.preload = 'auto';
+      video.src = video.dataset[themeName() === 'light' ? 'srcLight' : 'srcDark'] + ext;
+    };
+
+    const sync = () => {
+      if (inView && !userPaused) {
+        load();
+        video.play().catch(() => {});
+      } else if (!video.paused) {
+        video.pause();
+      }
+    };
+
+    video.addEventListener('play', setIcon);
+    video.addEventListener('pause', setIcon);
+
+    toggle.addEventListener('click', () => {
+      userPaused = !video.paused;
+      if (userPaused) video.pause();
+      else { load(); video.play().catch(() => {}); }
+    });
+
+    new MutationObserver(applyTheme).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+    applyTheme();
+    setIcon();
+
+    if (!('IntersectionObserver' in window)) { inView = true; sync(); return; }
+    new IntersectionObserver((entries) => {
+      inView = entries[0].isIntersecting;
+      sync();
+    }, { threshold: 0.35 }).observe(video);
+  }
+
   /* ---------------------------------------------------- npm integration */
 
   /* Version and monthly downloads per plugin card. The static markup already
@@ -862,6 +938,7 @@
     initPalette();
     initGitHub();
     initNpm();
+    initShowcase();
     initCV();
     initMisc();
 
