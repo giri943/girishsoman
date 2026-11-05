@@ -827,6 +827,165 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
   .projects--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* Showcase: one unit per plugin. Tabs on top, the film, then that plugin's panel */
+.showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+/* One tile per plugin: the film on top, its details below. The hairline and
+   shadow belong to the tile, so film and panel read as a single object. */
+.showcase__unit {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--surface);
+}
+[data-theme='dark'] .showcase__unit {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 120px -48px rgba(41, 151, 255, 0.3);
+}
+[data-theme='light'] .showcase__unit {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 34px 80px -44px rgba(0, 0, 0, 0.28);
+}
+
+/* The film's own stage colour fills the frame */
+.showcase__frame { position: relative; width: 100%; aspect-ratio: 16 / 10; }
+[data-theme='dark'] .showcase__frame { background: #000; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+[data-theme='light'] .showcase__frame { background: #f5f5f7; }
+/* Two stacked layers; the back one fades in once its first frame is ready */
+.showcase__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: opacity 420ms var(--ease-standard);
+}
+.showcase__video.is-back { opacity: 0; pointer-events: none; }
+
+.showcase__controls { display: flex; align-items: center; justify-content: center; gap: var(--space-3); }
+
+/* Segmented control, in the style of the theme toggle */
+.showcase__tabs {
+  position: relative;
+  display: inline-flex;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--fill);
+}
+.showcase__tabs-thumb {
+  position: absolute;
+  top: 4px; bottom: 4px; left: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-slow) var(--ease-out-expo), width var(--dur-slow) var(--ease-out-expo);
+}
+.showcase__tab {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 1.1rem 0.5rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  color: var(--text-secondary);
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.showcase__tab:hover, .showcase__tab[aria-selected='true'] { color: var(--text); }
+.showcase__tab-icon {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  opacity: 0.55;
+  filter: saturate(0.4);
+  transition: opacity var(--dur-base) var(--ease-standard), filter var(--dur-base) var(--ease-standard);
+}
+.showcase__tab:hover .showcase__tab-icon,
+.showcase__tab[aria-selected='true'] .showcase__tab-icon { opacity: 1; filter: none; }
+.showcase__tab-short { display: none; }
+
+/* Pause / play sits beside the tabs, as a sibling control */
+.showcase__toggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--fill);
+  color: var(--text);
+  transition: background-color var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-spring);
+}
+.showcase__toggle:hover { background: var(--fill-hover); }
+.showcase__toggle:active { transform: scale(0.94); }
+.showcase__toggle svg { width: 15px; height: 15px; }
+
+/* Phones only: a small pill over the film */
+.showcase__hint {
+  display: none;
+  position: absolute;
+  left: var(--space-3); bottom: var(--space-3);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  color: #fff;
+  pointer-events: none;
+}
+
+/* Phones: short labels, and the film opens full screen on tap, where it is legible */
+@media (max-width: 640px) {
+  .showcase__tab { padding: 0.45rem 0.8rem 0.45rem 0.45rem; gap: 0.4rem; font-size: var(--fs-xs); }
+  .showcase__tab-icon { width: 20px; height: 20px; }
+  .showcase__tab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .showcase__tab-short { display: inline; }
+  .showcase__unit { border-radius: var(--radius-lg); }
+  .showcase__frame { cursor: zoom-in; }
+  .showcase__hint { display: block; }
+}
+
+/* The selected plugin's details. All three panels share one grid cell, so the
+   block is always as tall as the tallest and switching never moves the page. */
+.reel-panels { display: grid; width: 100%; }
+.reel-panel {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--space-6) clamp(var(--space-8), 5vw, var(--space-16));
+  align-items: start;
+  padding: clamp(var(--space-6), 3.5vw, 2.75rem);
+  transition: opacity var(--dur-slow) var(--ease-standard), visibility 0s linear 0s;
+}
+.reel-panel[aria-hidden='true'] {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-standard), visibility 0s linear var(--dur-base);
+}
+.reel-panel__story { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+.reel-panel__head { display: flex; align-items: center; gap: var(--space-4); }
+.reel-panel__icon { width: 48px; height: 48px; flex: none; border-radius: 12px; }
+.reel-panel__title { font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem); font-weight: var(--fw-semibold); letter-spacing: -0.025em; line-height: 1.15; }
+.reel-panel__pkg { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-1); }
+.reel-panel__pkg code { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--text-tertiary); }
+.reel-panel__text { font-size: var(--fs-body); line-height: 1.6; color: var(--text-secondary); }
+.reel-panel .oss-card__install { margin-top: 0; }
+.reel-panel__meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.reel-panel__meta .oss-card__downloads { min-height: 0; }
+.reel-panel__features { gap: var(--space-4); padding-top: var(--space-1); }
+.reel-panel__features li { font-size: var(--fs-sm); line-height: 1.55; }
+
+@media (max-width: 767px) {
+  .reel-panel { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* Open source */
 .oss { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-4); }
 .oss-card { display: flex; flex-direction: column; gap: var(--space-4); }
@@ -1141,6 +1300,7 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
     --surface: transparent; --fill: transparent; --fill-hover: transparent;
   }
   .header, .drawer, .palette, .to-top, .toast-region, .contact,
+  .showcase__controls, .showcase__frame, .showcase__hint,
   .cal-wrap, .skip-link { display: none !important; }
 
   body { background: #fff !important; color: #000 !important; font-size: 11pt; }
@@ -1149,4 +1309,6 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
   .card { border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
   a[href^='http']::after { content: ' (' attr(href) ')'; font-size: 8pt; color: #555; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .reel-panels { display: block; }
+  .reel-panel, .reel-panel[aria-hidden='true'] { visibility: visible !important; opacity: 1 !important; transition: none !important; margin-bottom: 1rem; }
 }

@@ -792,6 +792,223 @@
     });
   }
 
+  /* ----------------------------------------------------- showcase reels */
+
+  /* One tile per plugin. The segmented control picks the plugin (its film and
+     its panel); the colour theme picks the film's dark or light render.
+
+     Films are double-buffered: two stacked <video> layers. The visible one keeps
+     playing while the next loads underneath, and they crossfade only once the
+     new film has a frame on screen, so a switch never flashes a poster or an
+     empty frame, however slow the network. Nothing downloads until the tile is
+     near the viewport; films play only while visible, and with reduced motion
+     on they wait for the visitor to press play. */
+  function initShowcase() {
+    const root = $('[data-showcase]');
+    const frame = root && $('.showcase__frame', root);
+    const first = frame && $('video', frame);
+    const toggle = root && $('[data-showcase-toggle]', root);
+    const tabs = root ? $$('[role="tab"]', root) : [];
+    const thumb = root && $('[data-showcase-thumb]', root);
+    const panels = root ? $$('.reel-panel', root) : [];
+    if (!first || !toggle || !tabs.length) return;
+
+    /* H.264 MP4 only: it plays everywhere, and the VP9 render came out larger */
+    const ext = '.mp4';
+    /* Posters are rendered at this moment of each film (its settled title card),
+       and first playback starts here too, so poster and film line up exactly. */
+    const POSTER_TIME = 1.8;
+    const FADE_MS = 420;
+
+    const themeName = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    let current = tabs.find((t) => t.getAttribute('aria-selected') === 'true') || tabs[0];
+    let userPaused = prefersReducedMotion();
+    let inView = false;
+    let started = false;
+    let token = 0;
+
+    const base = () => current.dataset.reel + '-' + themeName();
+
+    /* The second layer: same settings, no poster, hidden until it has a frame */
+    const second = first.cloneNode(false);
+    second.removeAttribute('poster');
+    second.setAttribute('aria-hidden', 'true');
+    second.classList.add('is-back');
+    first.after(second);
+    let front = first;
+    let back = second;
+
+    const setIcon = () => {
+      const playing = !front.paused;
+      $('use', toggle).setAttribute('href', playing ? '#i-pause' : '#i-play');
+      toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+    };
+
+    const label = () => front.setAttribute('aria-label', current.dataset.label || '');
+
+    /* First load: the visible layer, starting where its poster was taken */
+    const start = () => {
+      if (started) return;
+      started = true;
+      front.preload = 'auto';
+      front.addEventListener('loadedmetadata', () => { front.currentTime = POSTER_TIME; }, { once: true });
+      front.src = base() + ext;
+    };
+
+    /* Load `src` on the hidden layer, seek, and crossfade once a frame is ready.
+       A newer switch bumps the token, so a slower, older load can never win. */
+    const swapTo = (src, at, play) => {
+      const my = ++token;
+      const next = back;
+      const stale = () => my !== token;
+
+      const reveal = () => {
+        if (stale()) return;
+        const old = front;
+        next.classList.remove('is-back');
+        next.removeAttribute('aria-hidden');
+        old.classList.add('is-back');
+        old.setAttribute('aria-hidden', 'true');
+        old.removeAttribute('aria-label');
+        front = next;
+        back = old;
+        label();
+        setIcon();
+        /* Once the fade is over, stop the old layer and free its buffer */
+        setTimeout(() => {
+          if (back !== old) return;
+          old.pause();
+          old.removeAttribute('src');
+          old.load();
+        }, FADE_MS + 60);
+      };
+
+      const whenFrameShows = () => {
+        if (stale()) return;
+        if (play) {
+          next.play().catch(() => {});
+          if (next.requestVideoFrameCallback) next.requestVideoFrameCallback(() => reveal());
+          else next.addEventListener('playing', reveal, { once: true });
+        } else if (next.readyState >= 2) {
+          reveal();
+        } else {
+          next.addEventListener('loadeddata', reveal, { once: true });
+        }
+      };
+
+      next.addEventListener('loadedmetadata', () => {
+        if (stale()) return;
+        /* For a theme change, catch up with the visible film as it is now */
+        const target = typeof at === 'function' ? at() : at;
+        if (target > 0) {
+          next.addEventListener('seeked', whenFrameShows, { once: true });
+          next.currentTime = Math.min(target, Math.max(0, next.duration - 0.1));
+        } else {
+          whenFrameShows();
+        }
+      }, { once: true });
+
+      next.preload = 'auto';
+      next.src = src;
+    };
+
+    /* keepTime: a theme change, which continues the same moment.
+       Otherwise a new reel: from the top while playing, at its poster while paused. */
+    const applySource = (keepTime) => {
+      if (!started) {
+        front.poster = base() + '.jpg';
+        label();
+        return;
+      }
+      const play = !front.paused || (inView && !userPaused);
+      const at = keepTime ? () => front.currentTime + 0.12 : (play ? 0 : POSTER_TIME);
+      swapTo(base() + ext, at, play);
+    };
+
+    const sync = () => {
+      if (inView && !userPaused) {
+        start();
+        front.play().catch(() => {});
+      } else if (!front.paused) {
+        front.pause();
+      }
+    };
+
+    const moveThumb = () => {
+      if (!thumb) return;
+      thumb.style.width = current.offsetWidth + 'px';
+      thumb.style.transform = 'translateX(' + current.offsetLeft + 'px)';
+    };
+
+    const select = (tab, focus) => {
+      if (tab === current) return;
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+      current = tab;
+      /* Inactive panels stay in the page (search, print) but are hidden and inert */
+      panels.forEach((p) => {
+        const on = p.dataset.panelFor === tab.dataset.reel;
+        if (on) p.removeAttribute('aria-hidden'); else p.setAttribute('aria-hidden', 'true');
+        p.inert = !on;
+      });
+      if (focus) tab.focus();
+      moveThumb();
+      applySource(false);
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(tab, false));
+      /* Arrow keys, Home and End move between tabs, as the WAI-ARIA tabs pattern expects */
+      tab.addEventListener('keydown', (event) => {
+        const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+        if (event.key === 'Home') { event.preventDefault(); select(tabs[0], true); }
+        else if (event.key === 'End') { event.preventDefault(); select(tabs[tabs.length - 1], true); }
+        else if (step) { event.preventDefault(); select(tabs[(index + step + tabs.length) % tabs.length], true); }
+      });
+    });
+
+    [first, second].forEach((v) => {
+      v.addEventListener('play', () => { if (v === front) setIcon(); });
+      v.addEventListener('pause', () => { if (v === front) setIcon(); });
+    });
+
+    toggle.addEventListener('click', () => {
+      userPaused = !front.paused;
+      if (userPaused) front.pause();
+      else { start(); front.play().catch(() => {}); }
+    });
+
+    new MutationObserver(() => applySource(true)).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+    applySource(true);
+    setIcon();
+    moveThumb();
+    window.addEventListener('resize', rafThrottle(moveThumb));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveThumb);
+
+    /* Phones: the film is composed for a wide screen, so a tap opens it full screen */
+    const phone = window.matchMedia('(max-width: 640px)');
+    frame.addEventListener('click', () => {
+      if (!phone.matches) return;
+      userPaused = false;
+      start();
+      front.play().catch(() => {});
+      if (front.requestFullscreen) front.requestFullscreen().catch(() => {});
+      else if (front.webkitEnterFullscreen) front.webkitEnterFullscreen();
+    });
+
+    if (!('IntersectionObserver' in window)) { inView = true; sync(); return; }
+    new IntersectionObserver((entries) => {
+      inView = entries[0].isIntersecting;
+      sync();
+    }, { threshold: 0.35 }).observe(frame);
+  }
+
   /* ---------------------------------------------------- npm integration */
 
   /* Version and monthly downloads per plugin card. The static markup already
@@ -862,6 +1079,7 @@
     initPalette();
     initGitHub();
     initNpm();
+    initShowcase();
     initCV();
     initMisc();
 

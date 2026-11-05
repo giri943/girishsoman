@@ -122,6 +122,8 @@
       <g id="i-cap" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></g>
       <g id="i-phone" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.1 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4 12.8 12.8 0 0 0 2.8.7A2 2 0 0 1 22 16.9z"/></g>
       <g id="i-package" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.2M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></g>
+      <g id="i-play" fill="currentColor" stroke="none"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></g>
+      <g id="i-pause" fill="currentColor" stroke="none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g>
     </defs>
   </svg>
 
@@ -652,121 +654,166 @@
           </p>
         </div>
 
-        <div class="oss">
-          <article class="card oss-card" data-reveal data-npm="strapi-plugin-csv-import-export">
-            <header class="oss-card__head">
-              <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-layers"/></svg></span>
-              <span class="badge oss-card__version" data-npm-version>npm</span>
-            </header>
-            <div>
-              <h3 class="project__title">CSV Import &amp; Export</h3>
-              <p class="project__kind">strapi-plugin-csv-import-export</p>
-            </div>
-            <p class="project__text">Bulk CSV import and export for Strapi 5, driven by your own schema. Editors get
-              a template that matches the content type, a dry run that writes nothing, and a
-              per-row report of exactly what went wrong, so a 4,000-row spreadsheet goes in
-              without anyone writing a one-off script.</p>
-            <ul class="oss-card__features">
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Templates generated from the schema, so columns stay right as fields change</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Dry-run validation with a downloadable per-row error report</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Relations shown by label, not by document ID</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Per-role permissions that start closed; streams 200,000-row files</li>
-            </ul>
-            <div class="oss-card__install">
-              <code><span aria-hidden="true">$ </span>npm i strapi-plugin-csv-import-export</code>
-              <button class="btn btn--icon" type="button" data-copy="npm i strapi-plugin-csv-import-export"
-                      data-copy-label="Install command" aria-label="Copy install command for strapi-plugin-csv-import-export">
-                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
+        <!-- One unit per plugin: the tabs pick a plugin, which swaps the film (dark or
+             light render, following the theme) and the panel below it. main.js loads
+             a film only near the viewport and plays it while visible (not with reduced
+             motion). Inactive panels stay in the page for search and print, hidden and
+             inert, stacked in one grid cell so switching never shifts the layout. -->
+        <div class="showcase" data-reveal data-showcase>
+          <div class="showcase__controls">
+            <div class="showcase__tabs" role="tablist" aria-label="Plugin demos">
+              <span class="showcase__tabs-thumb" aria-hidden="true" data-showcase-thumb></span>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-csv" aria-selected="true"
+                      aria-controls="reel-panel-csv" data-reel="assets/video/csv-import-export"
+                      data-label="Screen recording: importing a CSV of 12 articles into Strapi with the CSV Import and Export plugin. A dry run lists four bad rows with reasons, the fixed file imports all 12, then the export dialog is shown.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/csv-import-export.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">CSV Import &amp; Export</span>
+                <span class="showcase__tab-short" aria-hidden="true">CSV</span>
+              </button>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-webp" aria-selected="false" tabindex="-1"
+                      aria-controls="reel-panel-webp" data-reel="assets/video/webp-converter"
+                      data-label="Screen recording: a 1.2 MB JPEG uploaded to the Strapi Media Library is stored as a 758 KB WebP, an SVG containing a script is refused, then six existing images are bulk-converted, saving 46%.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/webp-converter.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">WebP Converter</span>
+                <span class="showcase__tab-short" aria-hidden="true">WebP</span>
+              </button>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-azure" aria-selected="false" tabindex="-1"
+                      aria-controls="reel-panel-azure" data-reel="assets/video/azure-blob"
+                      data-label="Screen recording and terminal output: six photos uploaded through the Strapi Media Library are stored as 30 blobs in a private Azure container. The plain URL is refused with 403, the signed URL returns 200, and the same signed URL is refused once it expires.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/azure-blob.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">Azure Blob</span>
+                <span class="showcase__tab-short" aria-hidden="true">Azure</span>
               </button>
             </div>
-            <footer class="oss-card__foot">
-              <span class="oss-card__downloads" data-npm-downloads></span>
-              <div class="project__links">
-                <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-csv-import-export" target="_blank" rel="noopener noreferrer">
-                  npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
-                </a>
-                <a class="chip" href="https://github.com/giri943/strapi-plugin-import-export" target="_blank" rel="noopener noreferrer">
-                  Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
-                </a>
-              </div>
-            </footer>
-          </article>
+            <button class="showcase__toggle" type="button" data-showcase-toggle aria-label="Pause video">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pause"/></svg>
+            </button>
+          </div>
 
-          <article class="card oss-card" data-reveal data-npm="strapi-plugin-media-webp-convertor" style="--reveal-delay:80ms">
-            <header class="oss-card__head">
-              <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></span>
-              <span class="badge oss-card__version" data-npm-version>npm</span>
-            </header>
-            <div>
-              <h3 class="project__title">Media WebP Converter &amp; Upload Guard</h3>
-              <p class="project__kind">strapi-plugin-media-webp-convertor</p>
+          <div class="showcase__unit">
+            <div class="showcase__frame">
+              <video class="showcase__video" muted loop playsinline preload="none"
+                     width="1280" height="800"
+                     poster="assets/video/csv-import-export-dark.jpg"></video>
+              <span class="showcase__hint" aria-hidden="true">Tap for full screen</span>
             </div>
-            <p class="project__text">Converts uploads to WebP before they reach storage and refuses files a media
-              library should never accept. Strapi checks neither on its own. Also bulk-converts
-              an existing library and migrates media from local disk to S3.</p>
-            <ul class="oss-card__features">
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>JPEG, PNG, GIF, BMP, TIFF and HEIC become WebP automatically</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Magic-byte type checks: content must match the extension it claims</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Blocks executables, image/PHP polyglots, scripted SVGs and PDFs with JavaScript</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Bulk conversion with a savings report; local → S3 migration</li>
-            </ul>
-            <div class="oss-card__install">
-              <code><span aria-hidden="true">$ </span>npm i strapi-plugin-media-webp-convertor</code>
-              <button class="btn btn--icon" type="button" data-copy="npm i strapi-plugin-media-webp-convertor"
-                      data-copy-label="Install command" aria-label="Copy install command for strapi-plugin-media-webp-convertor">
-                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
-              </button>
-            </div>
-            <footer class="oss-card__foot">
-              <span class="oss-card__downloads" data-npm-downloads></span>
-              <div class="project__links">
-                <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-media-webp-convertor" target="_blank" rel="noopener noreferrer">
-                  npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
-                </a>
-                <a class="chip" href="https://github.com/giri943/strapi-plugin-media-webp-convertor" target="_blank" rel="noopener noreferrer">
-                  Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
-                </a>
-              </div>
-            </footer>
-          </article>
 
-          <article class="card oss-card" data-reveal data-npm="strapi-provider-upload-azure-blob" style="--reveal-delay:160ms">
-            <header class="oss-card__head">
-              <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-cloud"/></svg></span>
-              <span class="badge oss-card__version" data-npm-version>npm</span>
-            </header>
-            <div>
-              <h3 class="project__title">Azure Blob Storage Provider</h3>
-              <p class="project__kind">strapi-provider-upload-azure-blob</p>
+            <div class="reel-panels">
+              <article class="reel-panel" role="tabpanel" id="reel-panel-csv" aria-labelledby="reel-tab-csv"
+                       data-panel-for="assets/video/csv-import-export" data-npm="strapi-plugin-csv-import-export">
+                <div class="reel-panel__story">
+                  <div class="reel-panel__head">
+                    <img class="reel-panel__icon" src="assets/img/plugins/csv-import-export.svg" alt="" width="48" height="48">
+                    <div>
+                      <h3 class="reel-panel__title">CSV Import &amp; Export</h3>
+                      <p class="reel-panel__pkg"><code>strapi-plugin-csv-import-export</code> <span class="badge oss-card__version" data-npm-version>npm</span></p>
+                    </div>
+                  </div>
+                  <p class="reel-panel__text">Bulk CSV import and export for Strapi 5, driven by your own schema. Editors get a template that matches the content type, a dry run that writes nothing, and a per-row report of exactly what went wrong, so a 4,000-row spreadsheet goes in without anyone writing a one-off script.</p>
+                  <div class="oss-card__install">
+                  <code><span aria-hidden="true">$ </span>npm i strapi-plugin-csv-import-export</code>
+                  <button class="btn btn--icon" type="button" data-copy="npm i strapi-plugin-csv-import-export"
+                  data-copy-label="Install command" aria-label="Copy install command for strapi-plugin-csv-import-export">
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
+                  </button>
+                  </div>
+                  <div class="reel-panel__meta">
+                    <span class="oss-card__downloads" data-npm-downloads></span>
+                    <div class="project__links">
+                      <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-csv-import-export" target="_blank" rel="noopener noreferrer">
+                        npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                      <a class="chip" href="https://github.com/giri943/strapi-plugin-import-export" target="_blank" rel="noopener noreferrer">
+                        Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <ul class="reel-panel__features oss-card__features" aria-label="Highlights">
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Templates generated from the schema, so columns stay right as fields change</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Dry-run validation with a downloadable per-row error report</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Relations shown by label, not by document ID</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Per-role permissions that start closed; streams 200,000-row files</li>
+                </ul>
+              </article>
+
+              <article class="reel-panel" role="tabpanel" id="reel-panel-webp" aria-labelledby="reel-tab-webp"
+                       data-panel-for="assets/video/webp-converter" data-npm="strapi-plugin-media-webp-convertor" aria-hidden="true" inert>
+                <div class="reel-panel__story">
+                  <div class="reel-panel__head">
+                    <img class="reel-panel__icon" src="assets/img/plugins/webp-converter.svg" alt="" width="48" height="48">
+                    <div>
+                      <h3 class="reel-panel__title">Media WebP Converter &amp; Upload Guard</h3>
+                      <p class="reel-panel__pkg"><code>strapi-plugin-media-webp-convertor</code> <span class="badge oss-card__version" data-npm-version>npm</span></p>
+                    </div>
+                  </div>
+                  <p class="reel-panel__text">Converts uploads to WebP before they reach storage and refuses files a media library should never accept. Strapi checks neither on its own. Also bulk-converts an existing library and migrates media from local disk to S3.</p>
+                  <div class="oss-card__install">
+                  <code><span aria-hidden="true">$ </span>npm i strapi-plugin-media-webp-convertor</code>
+                  <button class="btn btn--icon" type="button" data-copy="npm i strapi-plugin-media-webp-convertor"
+                  data-copy-label="Install command" aria-label="Copy install command for strapi-plugin-media-webp-convertor">
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
+                  </button>
+                  </div>
+                  <div class="reel-panel__meta">
+                    <span class="oss-card__downloads" data-npm-downloads></span>
+                    <div class="project__links">
+                      <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-media-webp-convertor" target="_blank" rel="noopener noreferrer">
+                        npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                      <a class="chip" href="https://github.com/giri943/strapi-plugin-media-webp-convertor" target="_blank" rel="noopener noreferrer">
+                        Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <ul class="reel-panel__features oss-card__features" aria-label="Highlights">
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>JPEG, PNG, GIF, BMP, TIFF and HEIC become WebP automatically</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Magic-byte type checks: content must match the extension it claims</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Blocks executables, image/PHP polyglots, scripted SVGs and PDFs with JavaScript</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Bulk conversion with a savings report; local → S3 migration</li>
+                </ul>
+              </article>
+
+              <article class="reel-panel" role="tabpanel" id="reel-panel-azure" aria-labelledby="reel-tab-azure"
+                       data-panel-for="assets/video/azure-blob" data-npm="strapi-provider-upload-azure-blob" aria-hidden="true" inert>
+                <div class="reel-panel__story">
+                  <div class="reel-panel__head">
+                    <img class="reel-panel__icon" src="assets/img/plugins/azure-blob.svg" alt="" width="48" height="48">
+                    <div>
+                      <h3 class="reel-panel__title">Azure Blob Storage Provider</h3>
+                      <p class="reel-panel__pkg"><code>strapi-provider-upload-azure-blob</code> <span class="badge oss-card__version" data-npm-version>npm</span></p>
+                    </div>
+                  </div>
+                  <p class="reel-panel__text">A Strapi 5 upload provider for Azure Blob Storage that covers the setups real deployments use: private containers, managed identities and a CDN in front, not just an account key and a public bucket.</p>
+                  <div class="oss-card__install">
+                  <code><span aria-hidden="true">$ </span>npm i strapi-provider-upload-azure-blob</code>
+                  <button class="btn btn--icon" type="button" data-copy="npm i strapi-provider-upload-azure-blob"
+                  data-copy-label="Install command" aria-label="Copy install command for strapi-provider-upload-azure-blob">
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
+                  </button>
+                  </div>
+                  <div class="reel-panel__meta">
+                    <span class="oss-card__downloads" data-npm-downloads></span>
+                    <div class="project__links">
+                      <a class="chip" href="https://www.npmjs.com/package/strapi-provider-upload-azure-blob" target="_blank" rel="noopener noreferrer">
+                        npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                      <a class="chip" href="https://github.com/giri943/strapi-provider-upload-azure-blob" target="_blank" rel="noopener noreferrer">
+                        Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <ul class="reel-panel__features oss-card__features" aria-label="Highlights">
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Every Azure auth method, from account key and SAS to managed and workload identity</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Private containers served through short-lived, read-only signed URLs</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Azure CDN and Front Door hosts, with or without the container in the path</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Stream uploads, so plugins that re-upload files (like the WebP converter) just work</li>
+                </ul>
+              </article>
             </div>
-            <p class="project__text">A Strapi 5 upload provider for Azure Blob Storage that covers the setups real
-              deployments use: private containers, managed identities and a CDN in front,
-              not just an account key and a public bucket.</p>
-            <ul class="oss-card__features">
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Every Azure auth method, from account key and SAS to managed and workload identity</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Private containers served through short-lived, read-only signed URLs</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Azure CDN and Front Door hosts, with or without the container in the path</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Stream uploads, so plugins that re-upload files (like the WebP converter) just work</li>
-            </ul>
-            <div class="oss-card__install">
-              <code><span aria-hidden="true">$ </span>npm i strapi-provider-upload-azure-blob</code>
-              <button class="btn btn--icon" type="button" data-copy="npm i strapi-provider-upload-azure-blob"
-                      data-copy-label="Install command" aria-label="Copy install command for strapi-provider-upload-azure-blob">
-                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
-              </button>
-            </div>
-            <footer class="oss-card__foot">
-              <span class="oss-card__downloads" data-npm-downloads></span>
-              <div class="project__links">
-                <a class="chip" href="https://www.npmjs.com/package/strapi-provider-upload-azure-blob" target="_blank" rel="noopener noreferrer">
-                  npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
-                </a>
-                <a class="chip" href="https://github.com/giri943/strapi-provider-upload-azure-blob" target="_blank" rel="noopener noreferrer">
-                  Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
-                </a>
-              </div>
-            </footer>
-          </article>
+          </div>
         </div>
 
         <p class="oss__more" data-reveal>
