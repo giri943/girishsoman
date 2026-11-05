@@ -671,6 +671,18 @@
     }
   }
 
+  /* "Today", "Yesterday", "5 days ago", then a plain date past a fortnight */
+  function relativeDay(isoDate) {
+    const day = new Date(isoDate + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diff = Math.round((today - day) / 86400000);
+    if (diff <= 0) return 'Today';
+    if (diff === 1) return 'Yesterday';
+    if (diff < 14) return `${diff} days ago`;
+    return day.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
   function initGitHub() {
     const cards = $$('[data-gh-account]');
     if (!cards.length) return;
@@ -687,7 +699,13 @@
 
       const note = $('[data-cal-note]', card);
 
-      /* Profile: avatar, repo count, account age, freshest push */
+      /* "Last active" prefers the contribution calendar, which counts private
+         work. The newest public push is only a fallback: on a work account it
+         can be years behind. Whichever request lands first, the calendar wins. */
+      let activeFromCalendar = false;
+      let pushedFallback = null;
+
+      /* Profile: avatar, repo count, account age, freshest public push */
       fetch(`https://api.github.com/users/${user}`)
         .then((res) => {
           if (!res.ok) throw new Error('profile ' + res.status);
@@ -725,10 +743,11 @@
 
           const pushed = repos[0] && repos[0].pushed_at;
           if (pushed) {
-            fill('active', new Date(pushed).toLocaleDateString(undefined, {
+            pushedFallback = new Date(pushed).toLocaleDateString(undefined, {
               month: 'short',
               year: 'numeric'
-            }));
+            });
+            if (!activeFromCalendar) fill('active', pushedFallback);
           }
         })
         .catch(() => { /* settled by the sweep below */ })
@@ -755,12 +774,19 @@
 
           const total = days.reduce((sum, day) => sum + (day.count || 0), 0);
           fill('contributions', total.toLocaleString());
+
+          const lastDay = days.filter((day) => day.count > 0).pop();
+          if (lastDay) {
+            activeFromCalendar = true;
+            fill('active', relativeDay(lastDay.date));
+          }
           if (note) {
             note.textContent = `${total.toLocaleString()} contributions in the last year`;
           }
         })
         .catch(() => {
           fill('contributions', '—');
+          if (pushedFallback) fill('active', pushedFallback);
           if (note) note.textContent = 'Contribution graph unavailable right now';
         });
     });
