@@ -124,6 +124,7 @@
       <g id="i-package" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.2M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></g>
       <g id="i-play" fill="currentColor" stroke="none"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></g>
       <g id="i-pause" fill="currentColor" stroke="none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g>
+      <g id="i-person" fill="currentColor" stroke="none"><circle cx="12" cy="9" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></g>
     </defs>
   </svg>
 
@@ -846,7 +847,11 @@
         <div class="gh-accounts">
           <article class="card gh-account" data-gh-account="girish-soman" data-reveal>
             <header class="gh-account__head">
-              <img class="gh-account__avatar" data-gh-avatar src="" alt="" width="44" height="44" loading="lazy" decoding="async">
+              <span class="gh-account__avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><use href="#i-person"/></svg>
+                <img src="https://github.com/girish-soman.png?size=88" alt="" width="44" height="44"
+                     loading="lazy" decoding="async" onerror="this.remove()">
+              </span>
               <div class="gh-account__id">
                 <span class="gh-account__handle">@girish-soman</span>
                 <span class="gh-account__role">Work account · Schbang Digital Solutions</span>
@@ -895,7 +900,11 @@
           </article>
           <article class="card gh-account" data-gh-account="giri943" data-reveal style="--reveal-delay:80ms">
             <header class="gh-account__head">
-              <img class="gh-account__avatar" data-gh-avatar src="" alt="" width="44" height="44" loading="lazy" decoding="async">
+              <span class="gh-account__avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><use href="#i-person"/></svg>
+                <img src="https://github.com/giri943.png?size=88" alt="" width="44" height="44"
+                     loading="lazy" decoding="async" onerror="this.remove()">
+              </span>
               <div class="gh-account__id">
                 <span class="gh-account__handle">@giri943</span>
                 <span class="gh-account__role">Personal account · side projects &amp; experiments</span>
