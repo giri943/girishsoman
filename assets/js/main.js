@@ -792,23 +792,30 @@
     });
   }
 
-  /* ------------------------------------------------------ showcase reel */
+  /* ----------------------------------------------------- showcase reels */
 
-  /* One <video>, two renders: a dark stage and a light one. Nothing downloads
-     until the reel is near the viewport, it only plays while visible, and with
+  /* One <video> for every reel. The segmented control picks the reel, the
+     colour theme picks its dark or light render. Nothing downloads until the
+     showcase is near the viewport, it only plays while visible, and with
      reduced motion on it waits for the visitor to press play. */
   function initShowcase() {
     const root = $('[data-showcase]');
     const video = root && $('video', root);
     const toggle = root && $('[data-showcase-toggle]', root);
-    if (!video || !toggle) return;
+    const tabs = root ? $$('[role="tab"]', root) : [];
+    const thumb = root && $('[data-showcase-thumb]', root);
+    const panel = root && $('[role="tabpanel"]', root);
+    if (!video || !toggle || !tabs.length) return;
 
     /* H.264 MP4 only: it plays everywhere, and the VP9 render came out larger */
     const ext = '.mp4';
     const themeName = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    let current = tabs.find((t) => t.getAttribute('aria-selected') === 'true') || tabs[0];
     let userPaused = prefersReducedMotion();
     let inView = false;
     let loaded = false;
+
+    const sourceBase = () => current.dataset.reel + '-' + themeName();
 
     const setIcon = () => {
       const playing = !video.paused;
@@ -816,24 +823,26 @@
       toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
     };
 
-    const applyTheme = () => {
-      const base = video.dataset[themeName() === 'light' ? 'srcLight' : 'srcDark'];
-      video.poster = base + '.jpg';
+    /* Swap poster and, once loading has started, the source itself.
+       keepTime holds the position across a theme change; a new reel starts at 0. */
+    const applySource = (keepTime) => {
+      video.poster = sourceBase() + '.jpg';
+      video.setAttribute('aria-label', current.dataset.label || '');
       if (!loaded) return;
-      const at = video.currentTime;
-      const wasPlaying = !video.paused;
+      const at = keepTime ? video.currentTime : 0;
+      const shouldPlay = !video.paused || (inView && !userPaused);
       video.addEventListener('loadedmetadata', () => { video.currentTime = at; }, { once: true });
-      video.src = base + ext;
-      if (wasPlaying) video.play().catch(() => {});
+      video.src = sourceBase() + ext;
+      if (shouldPlay) video.play().catch(() => {});
       else video.load();
     };
 
     const load = () => {
       if (loaded) return;
       loaded = true;
-      /* From here on a source swap (theme change) may fetch straight away */
+      /* From here on a source swap (theme or reel change) may fetch straight away */
       video.preload = 'auto';
-      video.src = video.dataset[themeName() === 'light' ? 'srcLight' : 'srcDark'] + ext;
+      video.src = sourceBase() + ext;
     };
 
     const sync = () => {
@@ -845,6 +854,38 @@
       }
     };
 
+    const moveThumb = () => {
+      if (!thumb) return;
+      thumb.style.width = current.offsetWidth + 'px';
+      thumb.style.transform = 'translateX(' + current.offsetLeft + 'px)';
+    };
+
+    const select = (tab, focus) => {
+      if (tab === current) return;
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+      current = tab;
+      if (panel) panel.setAttribute('aria-labelledby', tab.id);
+      $$('[data-caption-for]', root).forEach((c) => { c.hidden = c.dataset.captionFor !== tab.dataset.reel; });
+      if (focus) tab.focus();
+      moveThumb();
+      applySource(false);
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(tab, false));
+      /* Arrow keys, Home and End move between tabs, as the WAI-ARIA tabs pattern expects */
+      tab.addEventListener('keydown', (event) => {
+        const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+        if (event.key === 'Home') { event.preventDefault(); select(tabs[0], true); }
+        else if (event.key === 'End') { event.preventDefault(); select(tabs[tabs.length - 1], true); }
+        else if (step) { event.preventDefault(); select(tabs[(index + step + tabs.length) % tabs.length], true); }
+      });
+    });
+
     video.addEventListener('play', setIcon);
     video.addEventListener('pause', setIcon);
 
@@ -854,12 +895,15 @@
       else { load(); video.play().catch(() => {}); }
     });
 
-    new MutationObserver(applyTheme).observe(document.documentElement, {
+    new MutationObserver(() => applySource(true)).observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-theme']
     });
-    applyTheme();
+    applySource(true);
     setIcon();
+    moveThumb();
+    window.addEventListener('resize', rafThrottle(moveThumb));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveThumb);
 
     if (!('IntersectionObserver' in window)) { inView = true; sync(); return; }
     new IntersectionObserver((entries) => {

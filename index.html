@@ -654,24 +654,42 @@
           </p>
         </div>
 
-        <!-- Showcase reel. Sources follow the colour theme and only load near the
-             viewport; main.js plays it while visible, unless reduced motion is on. -->
+        <!-- Showcase reels. One <video>; the segmented control picks the reel and
+             the colour theme picks the dark or light render. main.js loads a reel
+             only near the viewport and plays it while visible (not with reduced motion). -->
         <figure class="showcase" data-reveal data-showcase>
-          <div class="showcase__frame">
+          <div class="showcase__tabs" role="tablist" aria-label="Plugin demos">
+            <span class="showcase__tabs-thumb" aria-hidden="true" data-showcase-thumb></span>
+            <button class="showcase__tab" type="button" role="tab" id="reel-tab-csv" aria-selected="true"
+                    aria-controls="reel-panel" data-reel="assets/video/csv-import-export"
+                    data-label="Screen recording: importing a CSV of 12 articles into Strapi with the CSV Import and Export plugin. A dry run lists four bad rows with reasons, the fixed file imports all 12, then the export dialog is shown.">
+              CSV Import &amp; Export
+            </button>
+            <button class="showcase__tab" type="button" role="tab" id="reel-tab-webp" aria-selected="false" tabindex="-1"
+                    aria-controls="reel-panel" data-reel="assets/video/webp-converter"
+                    data-label="Screen recording: a 1.2 MB JPEG uploaded to the Strapi Media Library is stored as a 758 KB WebP, an SVG containing a script is refused, then six existing images are bulk-converted, saving 46%.">
+              WebP Converter
+            </button>
+          </div>
+
+          <div class="showcase__frame" id="reel-panel" role="tabpanel" aria-labelledby="reel-tab-csv">
             <video class="showcase__video" muted loop playsinline preload="none"
                    width="1280" height="800"
-                   poster="assets/video/csv-import-export-dark.jpg"
-                   data-src-dark="assets/video/csv-import-export-dark"
-                   data-src-light="assets/video/csv-import-export-light"
-                   aria-label="Screen recording: importing a CSV of 12 articles into Strapi with the CSV Import and Export plugin. A dry run lists four bad rows with reasons, the fixed file imports all 12, then the export dialog is shown."></video>
+                   poster="assets/video/csv-import-export-dark.jpg"></video>
             <button class="showcase__toggle" type="button" data-showcase-toggle aria-label="Pause video">
               <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pause"/></svg>
             </button>
           </div>
-          <figcaption class="showcase__caption">
+
+          <figcaption class="showcase__caption" data-caption-for="assets/video/csv-import-export">
             <strong>CSV Import &amp; Export in action.</strong>
             A dry run catches four bad rows before anything is written, the fixed file imports all 12,
             and the same menu exports them back out. Recorded in the plugin's own playground.
+          </figcaption>
+          <figcaption class="showcase__caption" data-caption-for="assets/video/webp-converter" hidden>
+            <strong>WebP Converter &amp; Upload Guard in action.</strong>
+            A 1.2 MB JPEG is stored as a 758 KB WebP, an SVG hiding a script is refused before it
+            reaches storage, and six existing images convert in one click, 46% smaller.
           </figcaption>
         </figure>
 

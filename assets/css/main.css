@@ -829,6 +829,35 @@ a.chip:hover { color: var(--text); background: var(--fill-hover); }
 
 /* Showcase reel above the plugin cards */
 .showcase { margin-bottom: var(--space-6); }
+
+/* Segmented control for picking a reel, in the style of the theme toggle */
+.showcase__tabs {
+  position: relative;
+  display: inline-flex;
+  margin-bottom: var(--space-4);
+  padding: 3px;
+  border-radius: var(--radius-full);
+  background: var(--fill);
+}
+.showcase__tabs-thumb {
+  position: absolute;
+  top: 3px; bottom: 3px; left: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-slow) var(--ease-out-expo), width var(--dur-slow) var(--ease-out-expo);
+}
+.showcase__tab {
+  position: relative;
+  z-index: 1;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.showcase__tab:hover, .showcase__tab[aria-selected='true'] { color: var(--text); }
 .showcase__frame {
   position: relative;
   aspect-ratio: 16 / 10;
