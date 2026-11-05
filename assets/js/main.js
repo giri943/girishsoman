@@ -794,63 +794,143 @@
 
   /* ----------------------------------------------------- showcase reels */
 
-  /* One <video> for every reel. The segmented control picks the plugin (its
-     film and its panel), the colour theme picks the film's dark or light render. Nothing downloads until the
-     showcase is near the viewport, it only plays while visible, and with
-     reduced motion on it waits for the visitor to press play. */
+  /* One tile per plugin. The segmented control picks the plugin (its film and
+     its panel); the colour theme picks the film's dark or light render.
+
+     Films are double-buffered: two stacked <video> layers. The visible one keeps
+     playing while the next loads underneath, and they crossfade only once the
+     new film has a frame on screen, so a switch never flashes a poster or an
+     empty frame, however slow the network. Nothing downloads until the tile is
+     near the viewport; films play only while visible, and with reduced motion
+     on they wait for the visitor to press play. */
   function initShowcase() {
     const root = $('[data-showcase]');
-    const video = root && $('video', root);
+    const frame = root && $('.showcase__frame', root);
+    const first = frame && $('video', frame);
     const toggle = root && $('[data-showcase-toggle]', root);
     const tabs = root ? $$('[role="tab"]', root) : [];
     const thumb = root && $('[data-showcase-thumb]', root);
     const panels = root ? $$('.reel-panel', root) : [];
-    if (!video || !toggle || !tabs.length) return;
+    if (!first || !toggle || !tabs.length) return;
 
     /* H.264 MP4 only: it plays everywhere, and the VP9 render came out larger */
     const ext = '.mp4';
+    /* Posters are rendered at this moment of each film (its settled title card),
+       and first playback starts here too, so poster and film line up exactly. */
+    const POSTER_TIME = 1.8;
+    const FADE_MS = 420;
+
     const themeName = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
     let current = tabs.find((t) => t.getAttribute('aria-selected') === 'true') || tabs[0];
     let userPaused = prefersReducedMotion();
     let inView = false;
-    let loaded = false;
+    let started = false;
+    let token = 0;
 
-    const sourceBase = () => current.dataset.reel + '-' + themeName();
+    const base = () => current.dataset.reel + '-' + themeName();
+
+    /* The second layer: same settings, no poster, hidden until it has a frame */
+    const second = first.cloneNode(false);
+    second.removeAttribute('poster');
+    second.setAttribute('aria-hidden', 'true');
+    second.classList.add('is-back');
+    first.after(second);
+    let front = first;
+    let back = second;
 
     const setIcon = () => {
-      const playing = !video.paused;
+      const playing = !front.paused;
       $('use', toggle).setAttribute('href', playing ? '#i-pause' : '#i-play');
       toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
     };
 
-    /* Swap poster and, once loading has started, the source itself.
-       keepTime holds the position across a theme change; a new reel starts at 0. */
-    const applySource = (keepTime) => {
-      video.poster = sourceBase() + '.jpg';
-      video.setAttribute('aria-label', current.dataset.label || '');
-      if (!loaded) return;
-      const at = keepTime ? video.currentTime : 0;
-      const shouldPlay = !video.paused || (inView && !userPaused);
-      video.addEventListener('loadedmetadata', () => { video.currentTime = at; }, { once: true });
-      video.src = sourceBase() + ext;
-      if (shouldPlay) video.play().catch(() => {});
-      else video.load();
+    const label = () => front.setAttribute('aria-label', current.dataset.label || '');
+
+    /* First load: the visible layer, starting where its poster was taken */
+    const start = () => {
+      if (started) return;
+      started = true;
+      front.preload = 'auto';
+      front.addEventListener('loadedmetadata', () => { front.currentTime = POSTER_TIME; }, { once: true });
+      front.src = base() + ext;
     };
 
-    const load = () => {
-      if (loaded) return;
-      loaded = true;
-      /* From here on a source swap (theme or reel change) may fetch straight away */
-      video.preload = 'auto';
-      video.src = sourceBase() + ext;
+    /* Load `src` on the hidden layer, seek, and crossfade once a frame is ready.
+       A newer switch bumps the token, so a slower, older load can never win. */
+    const swapTo = (src, at, play) => {
+      const my = ++token;
+      const next = back;
+      const stale = () => my !== token;
+
+      const reveal = () => {
+        if (stale()) return;
+        const old = front;
+        next.classList.remove('is-back');
+        next.removeAttribute('aria-hidden');
+        old.classList.add('is-back');
+        old.setAttribute('aria-hidden', 'true');
+        old.removeAttribute('aria-label');
+        front = next;
+        back = old;
+        label();
+        setIcon();
+        /* Once the fade is over, stop the old layer and free its buffer */
+        setTimeout(() => {
+          if (back !== old) return;
+          old.pause();
+          old.removeAttribute('src');
+          old.load();
+        }, FADE_MS + 60);
+      };
+
+      const whenFrameShows = () => {
+        if (stale()) return;
+        if (play) {
+          next.play().catch(() => {});
+          if (next.requestVideoFrameCallback) next.requestVideoFrameCallback(() => reveal());
+          else next.addEventListener('playing', reveal, { once: true });
+        } else if (next.readyState >= 2) {
+          reveal();
+        } else {
+          next.addEventListener('loadeddata', reveal, { once: true });
+        }
+      };
+
+      next.addEventListener('loadedmetadata', () => {
+        if (stale()) return;
+        /* For a theme change, catch up with the visible film as it is now */
+        const target = typeof at === 'function' ? at() : at;
+        if (target > 0) {
+          next.addEventListener('seeked', whenFrameShows, { once: true });
+          next.currentTime = Math.min(target, Math.max(0, next.duration - 0.1));
+        } else {
+          whenFrameShows();
+        }
+      }, { once: true });
+
+      next.preload = 'auto';
+      next.src = src;
+    };
+
+    /* keepTime: a theme change, which continues the same moment.
+       Otherwise a new reel: from the top while playing, at its poster while paused. */
+    const applySource = (keepTime) => {
+      if (!started) {
+        front.poster = base() + '.jpg';
+        label();
+        return;
+      }
+      const play = !front.paused || (inView && !userPaused);
+      const at = keepTime ? () => front.currentTime + 0.12 : (play ? 0 : POSTER_TIME);
+      swapTo(base() + ext, at, play);
     };
 
     const sync = () => {
       if (inView && !userPaused) {
-        load();
-        video.play().catch(() => {});
-      } else if (!video.paused) {
-        video.pause();
+        start();
+        front.play().catch(() => {});
+      } else if (!front.paused) {
+        front.pause();
       }
     };
 
@@ -890,13 +970,15 @@
       });
     });
 
-    video.addEventListener('play', setIcon);
-    video.addEventListener('pause', setIcon);
+    [first, second].forEach((v) => {
+      v.addEventListener('play', () => { if (v === front) setIcon(); });
+      v.addEventListener('pause', () => { if (v === front) setIcon(); });
+    });
 
     toggle.addEventListener('click', () => {
-      userPaused = !video.paused;
-      if (userPaused) video.pause();
-      else { load(); video.play().catch(() => {}); }
+      userPaused = !front.paused;
+      if (userPaused) front.pause();
+      else { start(); front.play().catch(() => {}); }
     });
 
     new MutationObserver(() => applySource(true)).observe(document.documentElement, {
@@ -911,20 +993,20 @@
 
     /* Phones: the film is composed for a wide screen, so a tap opens it full screen */
     const phone = window.matchMedia('(max-width: 640px)');
-    video.addEventListener('click', () => {
+    frame.addEventListener('click', () => {
       if (!phone.matches) return;
       userPaused = false;
-      load();
-      video.play().catch(() => {});
-      if (video.requestFullscreen) video.requestFullscreen().catch(() => {});
-      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+      start();
+      front.play().catch(() => {});
+      if (front.requestFullscreen) front.requestFullscreen().catch(() => {});
+      else if (front.webkitEnterFullscreen) front.webkitEnterFullscreen();
     });
 
     if (!('IntersectionObserver' in window)) { inView = true; sync(); return; }
     new IntersectionObserver((entries) => {
       inView = entries[0].isIntersecting;
       sync();
-    }, { threshold: 0.35 }).observe(video);
+    }, { threshold: 0.35 }).observe(frame);
   }
 
   /* ---------------------------------------------------- npm integration */
