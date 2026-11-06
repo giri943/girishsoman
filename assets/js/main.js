@@ -502,6 +502,7 @@
     { group: 'Links', icon: 'i-github', label: 'Open GitHub profile', keywords: 'code repos', run: () => window.open('https://github.com/giri943', '_blank', 'noopener') },
     { group: 'Links', icon: 'i-linkedin', label: 'Open LinkedIn profile', keywords: 'network cv', run: () => window.open('https://www.linkedin.com/in/girish-soman', '_blank', 'noopener') },
     { group: 'Links', icon: 'i-package', label: 'Open npm profile', keywords: 'packages plugins strapi', run: () => window.open('https://www.npmjs.com/~giri943', '_blank', 'noopener') },
+    { group: 'Links', icon: 'i-shield', label: 'Audit Log plugin', keywords: 'strapi npm audit trail history security', run: () => window.open('https://www.npmjs.com/package/strapi-plugin-cms-audit-log', '_blank', 'noopener') },
     { group: 'Links', icon: 'i-layers', label: 'CSV Import & Export plugin', keywords: 'strapi npm bulk csv', run: () => window.open('https://www.npmjs.com/package/strapi-plugin-csv-import-export', '_blank', 'noopener') },
     { group: 'Links', icon: 'i-shield', label: 'Media WebP Converter plugin', keywords: 'strapi npm upload security image', run: () => window.open('https://www.npmjs.com/package/strapi-plugin-media-webp-convertor', '_blank', 'noopener') },
     { group: 'Links', icon: 'i-cloud', label: 'Azure Blob Storage provider', keywords: 'strapi npm upload storage', run: () => window.open('https://www.npmjs.com/package/strapi-provider-upload-azure-blob', '_blank', 'noopener') }

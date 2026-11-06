@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Girish Soman — Senior Software Engineer</title>
-  <meta name="description" content="Senior Software Engineer with 5+ years building high-throughput microservices, real-time observability tooling and cloud infrastructure on Node.js, TypeScript, Next.js and AWS. Maintainer of three open-source Strapi 5 plugins.">
+  <meta name="description" content="Senior Software Engineer with 5+ years building high-throughput microservices, real-time observability tooling and cloud infrastructure on Node.js, TypeScript, Next.js and AWS. Maintainer of four open-source Strapi 5 plugins.">
   <meta name="author" content="Girish Soman S G">
   <link rel="canonical" href="https://giri943.github.io/girishsoman/">
 
@@ -282,7 +282,7 @@
             <p class="stat__label">Peak API response time cut</p>
           </div>
           <div class="stat" data-reveal="scale" style="--reveal-delay:160ms">
-            <div class="stat__value"><span data-count="3">0</span></div>
+            <div class="stat__value"><span data-count="4">0</span></div>
             <p class="stat__label">Open-source Strapi plugins on npm</p>
           </div>
           <div class="stat" data-reveal="scale" style="--reveal-delay:240ms">
@@ -329,7 +329,7 @@
             <h3 class="bento__title">Currently</h3>
             <p class="bento__text">
               Building real-time observability and AI messaging pipelines at Schbang,
-              remotely from Kerala, and maintaining three open-source Strapi plugins
+              remotely from Kerala, and maintaining four open-source Strapi plugins
               on the side.
             </p>
           </article>
@@ -404,8 +404,8 @@
                 <li>
                   <strong>Strapi platform tooling</strong>
                   Turned problems that kept recurring across client Strapi 5 projects
-                  (bulk CSV imports, upload security and WebP conversion, Azure storage)
-                  into three open-source plugins published on npm.
+                  (audit trails, bulk CSV imports, upload security and WebP conversion,
+                  Azure storage) into four open-source plugins published on npm.
                 </li>
               </ul>
 
@@ -665,7 +665,14 @@
           <div class="showcase__controls">
             <div class="showcase__tabs" role="tablist" aria-label="Plugin demos">
               <span class="showcase__tabs-thumb" aria-hidden="true" data-showcase-thumb></span>
-              <button class="showcase__tab" type="button" role="tab" id="reel-tab-csv" aria-selected="true"
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-audit" aria-selected="true"
+                      aria-controls="reel-panel-audit" data-reel="assets/video/audit-log"
+                      data-label="Screen recording: the Audit Log dashboard in Strapi. An editor's fix to a card title three levels deep is shown as a before and after diff, a failed sign-in is recorded, the integrity check passes, then a log row is edited directly in the database and the next check reports it as tampered.">
+                <img class="showcase__tab-icon" src="assets/img/plugins/audit-log.svg" alt="" width="20" height="20">
+                <span class="showcase__tab-label">Audit Log</span>
+                <span class="showcase__tab-short" aria-hidden="true">Audit</span>
+              </button>
+              <button class="showcase__tab" type="button" role="tab" id="reel-tab-csv" aria-selected="false" tabindex="-1"
                       aria-controls="reel-panel-csv" data-reel="assets/video/csv-import-export"
                       data-label="Screen recording: importing a CSV of 12 articles into Strapi with the CSV Import and Export plugin. A dry run lists four bad rows with reasons, the fixed file imports all 12, then the export dialog is shown.">
                 <img class="showcase__tab-icon" src="assets/img/plugins/csv-import-export.svg" alt="" width="20" height="20">
@@ -696,13 +703,51 @@
             <div class="showcase__frame">
               <video class="showcase__video" muted loop playsinline preload="none"
                      width="1280" height="800"
-                     poster="assets/video/csv-import-export-dark.jpg"></video>
+                     poster="assets/video/audit-log-dark.jpg"></video>
               <span class="showcase__hint" aria-hidden="true">Tap for full screen</span>
             </div>
 
             <div class="reel-panels">
+              <article class="reel-panel" role="tabpanel" id="reel-panel-audit" aria-labelledby="reel-tab-audit"
+                       data-panel-for="assets/video/audit-log" data-npm="strapi-plugin-cms-audit-log">
+                <div class="reel-panel__story">
+                  <div class="reel-panel__head">
+                    <img class="reel-panel__icon" src="assets/img/plugins/audit-log.svg" alt="" width="48" height="48">
+                    <div>
+                      <h3 class="reel-panel__title">Audit Log for Strapi 5</h3>
+                      <p class="reel-panel__pkg"><code>strapi-plugin-cms-audit-log</code> <span class="badge oss-card__version" data-npm-version>npm</span></p>
+                    </div>
+                  </div>
+                  <p class="reel-panel__text">Know who changed what in your CMS, and when. Every save, publish, upload, permission change and sign-in becomes an entry that says exactly what changed, down to one field deep inside a page builder, with the changed words highlighted. Entries are signed, so an integrity check flags any row edited in the database.</p>
+                  <div class="oss-card__install">
+                    <code><span aria-hidden="true">$ </span>npm i strapi-plugin-cms-audit-log</code>
+                    <button class="btn btn--icon" type="button" data-copy="npm i strapi-plugin-cms-audit-log"
+                            data-copy-label="Install command" aria-label="Copy install command for strapi-plugin-cms-audit-log">
+                      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-copy"/></svg>
+                    </button>
+                  </div>
+                  <div class="reel-panel__meta">
+                    <span class="oss-card__downloads" data-npm-downloads></span>
+                    <div class="project__links">
+                      <a class="chip" href="https://www.npmjs.com/package/strapi-plugin-cms-audit-log" target="_blank" rel="noopener noreferrer">
+                        npm <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                      <a class="chip" href="https://github.com/giri943/strapi-plugin-cms-audit-log" target="_blank" rel="noopener noreferrer">
+                        Source <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <ul class="reel-panel__features oss-card__features" aria-label="Highlights">
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Before and after for a single field inside one card of one page-builder section</li>
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Content, media, admin users and roles, API tokens, webhooks, content types and sign-ins</li>
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>HMAC-signed entries with a built-in integrity check; nothing is editable or deletable through the API</li>
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Filterable dashboard and CSV export, rate-limited and protected against formula injection</li>
+                </ul>
+              </article>
+
               <article class="reel-panel" role="tabpanel" id="reel-panel-csv" aria-labelledby="reel-tab-csv"
-                       data-panel-for="assets/video/csv-import-export" data-npm="strapi-plugin-csv-import-export">
+                       data-panel-for="assets/video/csv-import-export" data-npm="strapi-plugin-csv-import-export" aria-hidden="true" inert>
                 <div class="reel-panel__story">
                   <div class="reel-panel__head">
                     <img class="reel-panel__icon" src="assets/img/plugins/csv-import-export.svg" alt="" width="48" height="48">
